@@ -7,7 +7,7 @@
 	<persistence-unit name="kutatasiNaploPU" >
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<properties>
-			<property name="hibernate.ejb.cfgfile" value="/META-INF/hibernate.cfg.xml" />
+			<property name="hibernate.ejb.cfgfile" value="META-INF/hibernate.cfg.xml" />
 		</properties>
 	</persistence-unit>
 </persistence>

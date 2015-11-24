@@ -25,6 +25,6 @@ public class KNServiceModule extends AbstractModule {
 	@Provides
 	@Singleton
 	EntityManager provideEntityManager() {
-		return Persistence.createEntityManagerFactory("kutatas").createEntityManager();
+		return Persistence.createEntityManagerFactory("kutatasiNaploPU").createEntityManager();
 	}
 }

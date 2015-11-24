@@ -9,7 +9,7 @@ app.controller('AuthController', [ '$scope', '$rootScope', '$http', function($sc
 		}, {
 			'Content-type' : "application/json"
 		}).success(function(data) {
-			window.location = window.location.origin + "kutatasinaplo/auth/index.html";
+			window.location = window.location.origin + "/kutatasinaplo/auth/index.html";
 		}).error(function(data) {
 		});
 	}
