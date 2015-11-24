@@ -18,12 +18,6 @@ public class ExperimentServiceImpl extends AbstractEntityService<Experiment> imp
 	private AuthService authService;
 
 	@Override
-	public Experiment loadById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean create(ExperimentVO view) {
 		view.setOwner(mapper.map(authService.getCurrentUser()));
 		Experiment experiment = mapper.map(view);

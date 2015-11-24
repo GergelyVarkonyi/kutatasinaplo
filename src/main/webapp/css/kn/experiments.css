@@ -1,0 +1,7 @@
+.experiment-row {
+	cursor: pointer;
+}
+
+.experiment-row:hover {
+	background-color: #fff4e6;
+}

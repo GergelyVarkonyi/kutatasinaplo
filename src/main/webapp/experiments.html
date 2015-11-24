@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" type="text/css" href="css/kn/base.css">
 <link rel="stylesheet" type="text/css" href="css/kn/header.css">
+<link rel="stylesheet" type="text/css" href="css/kn/experiments.css">
 
 <script src="js/jquery/jquery-2.1.4.min.js"></script>
 <script src="js/angular/angular.min.js"></script>
@@ -14,7 +15,7 @@
 <script src="js/kn/components/header.js"></script>
 <script src="js/kn/experiments.js"></script>
 
-<title>Kutatási napló - index</title>
+<title>Kutatasi naplo - index</title>
 </head>
 <body>
 	<div ng-controller="HeaderController">
@@ -53,7 +54,7 @@
 				</form>
 			</div>
 			<div>
-				<table class="table table-hover">
+				<table class="table">
 					<thead>
 					    <tr>
 						    <th>#</th>
@@ -63,7 +64,7 @@
 					    </tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="exp in experiments">
+						<tr ng-repeat="exp in experiments" ng-click="load(exp.id)" class="experiment-row">
 				            <th scope="row">{{$index}}</th>
 				            <td>{{exp.name}}</td>
 				            <td>{{exp.description}}</td>

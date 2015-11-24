@@ -24,6 +24,11 @@
     margin-left: 15px;
 }
 
+.page-title-label {
+	margin-left: 15px;
+    vertical-align: text-top;
+}
+
 .not-resizable {
 	resize: none;
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="knApp">
+<head>
+<link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="css/kn/base.css">
+<link rel="stylesheet" type="text/css" href="css/kn/header.css">
+
+<script src="js/jquery/jquery-2.1.4.min.js"></script>
+<script src="js/angular/angular.min.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<script src="js/purl.js"></script>
+
+<script src="js/kn/base.js"></script>
+<script src="js/kn/components/header.js"></script>
+<script src="js/kn/experimentPage.js"></script>
+
+<title>Kutatasi naplo - index</title>
+</head>
+<body>
+	<div ng-controller="HeaderController">
+		<header></header>
+	</div>
+	<div id="page-container" ng-controller="ExperimentController">
+		<div class="page-content">
+			<div class="page-title-container">
+				<h2 class="page-title">
+					Experiment: {{data.name}}
+					<span class="label label-primary page-title-label" ng-if='data.public == "true"'>Public</span>
+					<span class="label label-warning page-title-label" ng-if='data.public == "false"'>Private</span>
+				</h2>
+			</div>
+			<div>
+			<h4>
+				Description
+			</h4>
+			{{data.description}}
+			<h4>
+				Owner
+			</h4>
+			{{data.owner.name}}
+			<h4>
+				Participants
+			</h4>
+			{{data.owner.participants}}
+			<h4>
+				Files
+			</h4>
+			<h4>
+				Images
+			</h4>
+			<h4>
+				Urls
+			</h4>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

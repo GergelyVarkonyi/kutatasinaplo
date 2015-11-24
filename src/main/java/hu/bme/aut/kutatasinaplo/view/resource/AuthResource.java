@@ -19,10 +19,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import lombok.extern.java.Log;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 @Path("/auth")
+@Log
 public class AuthResource {
 
 	private AuthService authService;
@@ -40,6 +43,7 @@ public class AuthResource {
 	@Path("/login")
 	@Produces(value = MediaType.APPLICATION_JSON)
 	public Response login(@Context UriInfo uriInfo, UserVO user) {
+		log.info("Login with: " + user.getName());
 		try {
 			if (authService.login(user.getName(), user.getPwd())) {
 				return Response.seeOther(uriInfo.getBaseUriBuilder().path("../auth/index.html").build()).build();

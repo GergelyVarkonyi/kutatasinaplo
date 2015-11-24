@@ -15,11 +15,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import lombok.extern.java.Log;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 @Path("/experiment")
+@Log
 public class ExperimentResource {
 
 	private ExperimentService experimentService;
@@ -35,6 +38,7 @@ public class ExperimentResource {
 	@Path("/create")
 	@Produces(value = MediaType.APPLICATION_JSON)
 	public Response create(ExperimentVO view) {
+		log.info("Create experiment: " + view.getName());
 		try {
 			if (experimentService.create(view)) {
 				return Response.ok().build();
@@ -44,6 +48,24 @@ public class ExperimentResource {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path("/load")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public ExperimentVO load(String id) {
+		log.info("Load experiment: " + id);
+		try {
+			Experiment experiment = experimentService.loadById(Integer.valueOf(id));
+			if (experiment != null) {
+				return mapper.map(experiment);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 

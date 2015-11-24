@@ -36,6 +36,10 @@ app.controller('ExperimentsController', ['$scope', '$http', function($scope, $ht
 			);
 	}
 	
+	$scope.load = function(id) {
+		window.location = window.location.origin + "/kutatasinaplo/experimentPage.html?id="+id; 
+	}
+	
 	function init() {
 		$http.get('rest/experiment/list/experiment').then(
 					// Success
