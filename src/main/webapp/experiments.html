@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html ng-app="knApp">
+<head>
+<link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="css/kn/base.css">
+<link rel="stylesheet" type="text/css" href="css/kn/header.css">
+
+<script src="js/jquery/jquery-2.1.4.min.js"></script>
+<script src="js/angular/angular.min.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+
+<script src="js/kn/base.js"></script>
+<script src="js/kn/components/header.js"></script>
+<script src="js/kn/experiments.js"></script>
+
+<title>Kutatási napló - index</title>
+</head>
+<body>
+	<div ng-controller="HeaderController">
+		<header></header>
+	</div>
+	<div id="page-container" ng-controller="ExperimentsController">
+		<div class="page-content">
+			<div class="page-title-container">
+				<h2 class="page-title">
+					Experiments
+				</h2>
+				<button class="btn btn-default page-title-button" type="submit" ng-click="slideDownNew()">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					New
+				</button>
+			</div>
+			<div id="new-experiment-form-container" class="accordion-form-container">
+				<form>
+				  <div class="form-group">
+				    <label for="new-experiment-name">Name</label>
+				    <input type="text" class="form-control" id="new-experiment-name" placeholder="Name">
+				  </div>
+				  <div class="form-group">
+				    <label for="new-experiment-description">Description</label>
+				    <textarea class="form-control not-resizable" id="new-experiment-description" rows="6"></textarea>
+				  </div>
+				  <div class="form-group">
+				      <div class="checkbox">
+				        <label>
+				          <input id="new-experiment-public" type="checkbox"> Public 
+				        </label>
+				      </div>
+				  </div>
+				  <button type="submit" class="btn btn-success" ng-click="create()">Create</button>
+				  <button type="submit" class="btn btn-warning" ng-click="slideUpNew()">Cancel</button>
+				</form>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead>
+					    <tr>
+						    <th>#</th>
+						    <th>Name</th>
+						    <th>Description</th>
+						    <th>Owner</th>
+					    </tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="exp in experiments">
+				            <th scope="row">{{$index}}</th>
+				            <td>{{exp.name}}</td>
+				            <td>{{exp.description}}</td>
+				            <td>{{exp.owner.name}}</td>
+				        </tr>
+			        </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

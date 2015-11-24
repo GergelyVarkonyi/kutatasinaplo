@@ -24,12 +24,12 @@ import lombok.experimental.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(unique=true)
+	@Column(unique = true)
 	private String name;
 	@Column
 	private String email;

@@ -1,7 +1,5 @@
 package hu.bme.aut.kutatasinaplo.view.model;
 
-import hu.bme.aut.kutatasinaplo.model.Role;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,15 +16,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVO {
-	@XmlElement(name = "id")
-	protected int id;
-	@XmlElement(name = "name", required = true)
-	protected String name;
-	@XmlElement(name = "pwd", required = true)
-	protected String pwd;
-	@XmlElement(name = "email")
-	protected String email;
-	@XmlElement(name = "role")
-	protected Role role;
+public class UrlVO {
+	@XmlElement(name = "label")
+	protected String label;
+	@XmlElement(name = "url")
+	protected String url;
 }

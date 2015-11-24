@@ -16,6 +16,4 @@ public interface UserService {
 	public boolean saveUser(User user);
 
 	public boolean deleteUser(User user);
-
-	public String loadKey(int userId);
 }

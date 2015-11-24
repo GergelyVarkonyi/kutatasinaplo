@@ -1,11 +1,14 @@
-var app = angular.module('baseApp');
+var app = angular.module('knApp');
 
 app.controller('AuthController', [ '$scope', '$rootScope', '$http', function($scope, $rootScope, $http) {
 
 	$scope.login = function() {
+		var name = $("#username").val(); 
+		var pwd =  $("#pwd").val();
+			
 		$http.post("rest/auth/login", {
-			'name' : "admin",
-			'pwd' : "0000"
+			'name' : name,
+			'pwd' : pwd
 		}, {
 			'Content-type' : "application/json"
 		}).success(function(data) {

@@ -1,128 +1,33 @@
-#body-content {
-	width: 1200px;
-	margin: 0px auto;
-	margin-top: 5px;
-}
-
-.center-div {
-	margin: 0px auto;
+#page-container {
 	width: 940px;
+	margin: 0px auto;
+	margin-top: 15px;
 }
 
-#login-panel-container{
-	width: 400px;
+.page-content {
+	margin: 0px auto;
+	width: 900px;
 }
 
-.btn-to-right {
-	float: right;
+.page-title-container {
+	height: 50px;
+	margin-bottom: 30px;
 }
 
-.animate-background-success{
-    -webkit-animation-name: success; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 2s; /* Chrome, Safari, Opera */
-    animation-name: success;
-    animation-duration: 2s;
+.page-title {
+	display: inline-block;
 }
 
-.animate-background-fail{
-    -webkit-animation-name: fail; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 2s; /* Chrome, Safari, Opera */
-    animation-name: fail;
-    animation-duration: 2s;
+.page-title-button {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-left: 15px;
 }
 
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
+.not-resizable {
+	resize: none;
 }
 
-#roles-not-on-module{
-	float: left;
-	width: 50%;
-}
-
-#roles-on-module{
-	float: right;
-	width: 50%;
-}
-
-#role-list-not-on-module{
-	list-style-type: none;
-}
-
-#role-list-on-module{
-	list-style-type: none;
-}
-
-.role-list-item{
-	border: 1px solid white;
-	padding: 2px 5px;
-	margin: 2px 0px;
-}
-
-.role-droppable-not-on, .role-droppable-on{
-	font-style: italic;
-}
-
-.role-draggable-not-on, .role-draggable-on{
-	cursor: move;
-}
-
-.role-drop-palceholder-hover{
-	background-color: #B4D9FF;
-}
-
-.role-drop-palceholder-active{
-	border: 1px dotted;
-}
-
-.role-drag-moving{
-	border: 1px dotted;
-}
-
-.role-drag-helper{
-	
-}
-
-.fix-list-item{
-	background-color: #E3E5E7;
-}
-
-/* Chrome, Safari, Opera */
-@-webkit-keyframes success {
-    from {background-color: #addbad;}
-    to {background-color: white;}
-}
-
-/* Standard syntax */
-@keyframes success {
-    from {background-color: #addbad;}
-    to {background-color: white;}
-}
-
-/* Chrome, Safari, Opera */
-@-webkit-keyframes fail {
-    from {background-color: #e48683;}
-    to {background-color: white;}
-}
-
-/* Standard syntax */
-@keyframes fail {
-    from {background-color: #e48683;}
-    to {background-color: white;}
+.accordion-form-container {
+	display: none;
 }

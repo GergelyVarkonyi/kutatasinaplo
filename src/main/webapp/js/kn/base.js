@@ -1,1 +1,1 @@
-var app = angular.module('baseApp', []);
+var app = angular.module('knApp', []);

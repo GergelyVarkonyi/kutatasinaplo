@@ -1,0 +1,50 @@
+#header-container{
+	height:50px;
+	width:100%;
+	
+	background-color: #be9b7b;
+}
+
+.header-title{
+	height:50px;
+	width: 150px;
+	float: left;
+	
+	margin-right: 50px;
+}
+
+.header-button{
+	height:50px;
+	width: 150px;
+	margin-left: -1px;
+	
+	border-color: #fff4e6;
+	border-width: 1px;
+	border-left-style: solid;
+	border-right-style: solid;
+	
+	color: white;
+}
+
+.header-right-button {
+	float: right;	
+}
+
+.header-left-button {
+	float: left;
+}
+
+.header-menu-content {
+	font-size: 18px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    margin: auto;
+}
+
+.header-button:hover{
+	color: #3c2f2f;
+	background-color: #fff4e6;
+	
+	cursor: pointer;
+}

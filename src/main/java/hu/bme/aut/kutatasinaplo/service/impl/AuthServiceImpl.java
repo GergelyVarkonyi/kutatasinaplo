@@ -1,6 +1,8 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
+import hu.bme.aut.kutatasinaplo.model.User;
 import hu.bme.aut.kutatasinaplo.service.AuthService;
+import hu.bme.aut.kutatasinaplo.service.UserService;
 
 import javax.enterprise.context.RequestScoped;
 
@@ -12,8 +14,13 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
+import com.google.inject.Inject;
+
 @RequestScoped
 public class AuthServiceImpl implements AuthService {
+
+	@Inject
+	private UserService userService;
 
 	@Override
 	public boolean login(String name, String pwd) {
@@ -52,7 +59,18 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean logout(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			SecurityUtils.getSecurityManager().logout(SecurityUtils.getSubject());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public User getCurrentUser() {
+		Subject subject = SecurityUtils.getSubject();
+		return userService.loadByName((String) subject.getPrincipal());
 	}
 }

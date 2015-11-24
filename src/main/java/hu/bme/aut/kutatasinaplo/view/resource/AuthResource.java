@@ -1,5 +1,6 @@
 package hu.bme.aut.kutatasinaplo.view.resource;
 
+import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.Role;
 import hu.bme.aut.kutatasinaplo.model.User;
 import hu.bme.aut.kutatasinaplo.service.AuthService;
@@ -26,11 +27,13 @@ public class AuthResource {
 
 	private AuthService authService;
 	private UserService userService;
+	private DataViewMapper mapper;
 
 	@Inject
-	public AuthResource(AuthService authService, UserService userService) {
+	public AuthResource(AuthService authService, UserService userService, DataViewMapper mapper) {
 		this.authService = authService;
 		this.userService = userService;
+		this.mapper = mapper;
 	}
 
 	@POST
@@ -59,5 +62,11 @@ public class AuthResource {
 	@Path("/list/users")
 	public List<User> listUsers() {
 		return userService.loadAll();
+	}
+
+	@GET
+	@Path("/current")
+	public UserVO getCurrentUser() {
+		return mapper.map(authService.getCurrentUser());
 	}
 }
