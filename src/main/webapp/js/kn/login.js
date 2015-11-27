@@ -16,6 +16,10 @@ app.controller('AuthController', [ '$scope', '$rootScope', '$http', function($sc
 		}).error(function(data) {
 		});
 	}
+	
+	$scope.register = function() {
+		window.location = window.location.origin + "/kutatasinaplo/register.html";
+	}
 
 	var init = function() {
 

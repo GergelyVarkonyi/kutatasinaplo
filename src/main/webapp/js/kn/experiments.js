@@ -44,11 +44,13 @@ app.controller('ExperimentsController', ['$scope', '$http', function($scope, $ht
 		$http.get('rest/experiment/list/experiment').then(
 					// Success
 					function (resp) {
-						var experimentsData = resp.data.experiment;
-						if(experimentsData.constructor == Array) {
-							$scope.experiments = resp.data.experiment;
-						} else {
-							$scope.experiments[0] = experimentsData;
+						if(resp.data) {
+							var experimentsData = resp.data.experiment;
+							if(experimentsData.constructor == Array) {
+									$scope.experiments = resp.data.experiment;
+							} else {
+								$scope.experiments[0] = experimentsData;
+							}
 						}
 					},
 					// Error

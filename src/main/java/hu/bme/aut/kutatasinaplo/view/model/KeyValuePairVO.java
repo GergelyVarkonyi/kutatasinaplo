@@ -20,7 +20,7 @@ public class KeyValuePairVO {
 	@XmlElement(name = "id")
 	protected int id;
 	@XmlElement(name = "key", required = true)
-	protected String key;
+	protected String keyOfInstance;
 	@XmlElement(name = "value", required = true)
 	protected String value;
 

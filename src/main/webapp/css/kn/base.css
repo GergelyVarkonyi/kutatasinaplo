@@ -36,3 +36,23 @@
 .accordion-form-container {
 	display: none;
 }
+
+.key-value-pair-label {
+	margin-right: 5px;
+}
+
+.key-value-pair-key-input {
+	margin-right: 5px;
+}
+
+.key-value-pair-description-input {
+	
+}
+
+.key-value-pair-container {
+	margin-bottom: 5px;
+}
+
+.key-value-pair {
+	margin-bottom: 10px;
+}

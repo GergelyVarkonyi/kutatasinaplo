@@ -1,5 +1,6 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
+import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.AbstractEntity;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
 	@Inject
 	protected Provider<EntityManager> emProvider;
+	@Inject
+	protected DataViewMapper mapper;
 
 	private Class<T> clazz = getEntityClass();
 

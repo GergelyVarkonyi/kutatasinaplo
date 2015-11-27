@@ -1,7 +1,9 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
+import hu.bme.aut.kutatasinaplo.model.Role;
 import hu.bme.aut.kutatasinaplo.model.User;
 import hu.bme.aut.kutatasinaplo.service.UserService;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,13 +14,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.google.common.base.Strings;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class UserServiceImpl extends AbstractEntityService<User> implements UserService {
-
-	@Inject
-	private Provider<EntityManager> emProvider;
 
 	@Override
 	public User loadByName(String name) {
@@ -39,15 +36,20 @@ public class UserServiceImpl extends AbstractEntityService<User> implements User
 	}
 
 	@Override
-	public boolean createUser(User user, String pwd) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean saveUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createUser(UserVO view) {
+		view.setRole(Role.USER);
+		User user = mapper.map(view);
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.persist(user);
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
 	}
 
 	@Override

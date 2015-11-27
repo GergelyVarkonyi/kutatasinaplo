@@ -40,7 +40,7 @@ public class UserResource {
 	public Response create(UserVO view) {
 		log.info("Create user: " + view.getName());
 		try {
-			if (false) {
+			if (userService.createUser(view)) {
 				return Response.ok().build();
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();

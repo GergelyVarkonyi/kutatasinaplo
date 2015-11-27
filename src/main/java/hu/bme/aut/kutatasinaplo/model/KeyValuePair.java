@@ -26,7 +26,7 @@ public class KeyValuePair implements AbstractEntity {
 	private int id;
 
 	@Column
-	private String key;
+	private String keyOfInstance;
 	@Column
 	private String value;
 }

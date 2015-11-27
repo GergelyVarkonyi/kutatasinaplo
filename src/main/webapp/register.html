@@ -13,7 +13,8 @@
 
 <script src="js/kn/base.js"></script>
 <script src="js/kn/components/header.js"></script>
-<script src="js/kn/login.js"></script>
+<script src="js/kn/register.js"></script>
+<script src="js/kn/components/keyValuePairComponent.js"></script>
 
 <title>Kutatasi naplo</title>
 </head>
@@ -21,28 +22,34 @@
 	<div ng-controller="HeaderController">
 		<header></header>
 	</div>
-	<div id="page-container" ng-controller="AuthController">
+	<div id="page-container" ng-controller="RegisterController">
 		<div class="page-content">
 			<div class="page-title-container">
 				<h2 class="page-title">
-					Sign in
-				</h2>
-				<button class="btn btn-default page-title-button" type="submit" ng-click="register()">
 					Register
-				</button>
+				</h2>
 			</div>
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<form>
 						<div class="form-group">
 							<label for="username">User name</label>
-							<input id="username" type="text" class="form-control" placeholder="Name">
+							<input id="username" type="text" class="form-control" placeholder="Name" ng-model="user.name">
 						</div>
 						<div class="form-group">
 							<label for="pwd">Password</label>
-							<input id="pwd" type="password" class="form-control" placeholder="Password">
+							<input id="pwd" type="password" class="form-control" placeholder="Password" ng-model="user.pwd">
 						</div>
-						<button type="submit" class="btn btn-primary btn-to-right" ng-click="login()">Login</button>
+						<div class="form-group">
+							<label for="email">E-mail address</label>
+							<input id="email" type="email" class="form-control" placeholder="E-mail address" ng-model="user.email">
+						</div>
+						
+						<label for="knowledge">Knowledge</label>
+						<key-value-pair-component id="knowledge" values="user.knowledge" key-label="'Topic'" value-label="'Description'" button-label="'Add'" add-new-knowledge="addNewKnowledge()">
+						</key-value-pair-component>
+						
+						<button type="submit" class="btn btn-primary btn-to-right" ng-click="save()">Register</button>
 					</form>
 				</div>
 			</div>

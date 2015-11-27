@@ -229,7 +229,7 @@ public class DataViewMapper {
 			KeyValuePair model = new KeyValuePair();
 
 			model.setId(view.getId());
-			model.setKey(view.getKey());
+			model.setKeyOfInstance(view.getKeyOfInstance());
 			model.setValue(view.getValue());
 
 			return model;
@@ -243,7 +243,7 @@ public class DataViewMapper {
 			KeyValuePairVO view = new KeyValuePairVO();
 
 			view.setId(model.getId());
-			view.setKey(model.getKey());
+			view.setKeyOfInstance(model.getKeyOfInstance());
 			view.setValue(model.getValue());
 
 			return view;

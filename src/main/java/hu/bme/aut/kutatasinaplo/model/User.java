@@ -1,8 +1,10 @@
 package hu.bme.aut.kutatasinaplo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,8 +41,13 @@ public class User implements AbstractEntity {
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<KeyValuePair> knowledge;
+
+	public void setKnowledge(List<KeyValuePair> knowledge) {
+		List<KeyValuePair> eager = new ArrayList<KeyValuePair>(knowledge);
+		this.knowledge = eager;
+	}
 
 	public Set<String> getRoles() {
 		// TODO Auto-generated method stub
