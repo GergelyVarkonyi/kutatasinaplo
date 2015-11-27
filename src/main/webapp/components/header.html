@@ -18,6 +18,16 @@
 			</div>
 		</div>
 	</a>
+	<div class="header-button header-right-button" ng-if="user" ng-click="logout()">
+		<div class="header-menu-content">
+			Log out ({{user.name}})
+		</div>
+	</div>
+	<div class="header-button header-right-button" ng-if="!user" ng-click="signIn()">
+		<div class="header-menu-content">
+			Sign in
+		</div>
+	</div>
 	<a href="/kutatasinaplo/auth/admin.html">
 		<div class="header-button header-right-button ">
 			<div class="header-menu-content">

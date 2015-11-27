@@ -59,8 +59,14 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean logout(String name) {
+		// TODO
+		return false;
+	}
+
+	@Override
+	public boolean logoutCurrentUser() {
 		try {
-			SecurityUtils.getSecurityManager().logout(SecurityUtils.getSubject());
+			SecurityUtils.getSubject().logout();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

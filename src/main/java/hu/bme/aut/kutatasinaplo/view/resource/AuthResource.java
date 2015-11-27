@@ -73,4 +73,20 @@ public class AuthResource {
 	public UserVO getCurrentUser() {
 		return mapper.map(authService.getCurrentUser());
 	}
+
+	@GET
+	@Path("/logout")
+	public Response getCurrentUser(@Context UriInfo uriInfo) {
+		log.info("Log out");
+		try {
+			if (authService.logoutCurrentUser()) {
+				return Response.seeOther(uriInfo.getBaseUriBuilder().path("../experiments.html").build()).build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
 }

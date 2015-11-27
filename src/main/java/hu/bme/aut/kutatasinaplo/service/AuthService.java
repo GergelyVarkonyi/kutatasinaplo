@@ -8,4 +8,6 @@ public interface AuthService {
 	public boolean logout(String name);
 
 	public User getCurrentUser();
+
+	public boolean logoutCurrentUser();
 }
