@@ -1,7 +1,5 @@
 package hu.bme.aut.kutatasinaplo.view.model;
 
-import hu.bme.aut.kutatasinaplo.model.Role;
-
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,23 +12,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@XmlRootElement(name = "user")
+@XmlRootElement(name = "project")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVO {
+public class ProjectVO {
 	@XmlElement(name = "id")
 	protected int id;
 	@XmlElement(name = "name", required = true)
 	protected String name;
-	@XmlElement(name = "pwd", required = true)
-	protected String pwd;
-	@XmlElement(name = "email")
-	protected String email;
-	@XmlElement(name = "role")
-	protected Role role;
-	@XmlElement(name = "knowledge")
-	protected List<KeyValuePairVO> knowledge;
+	@XmlElement(name = "description", required = true)
+	protected String description;
+	@XmlElement(name = "participants")
+	protected List<UserVO> participants;
+	@XmlElement(name = "experiments")
+	private List<ExperimentVO> experiments;
 }

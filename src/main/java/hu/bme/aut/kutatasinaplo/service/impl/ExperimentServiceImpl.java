@@ -22,13 +22,9 @@ public class ExperimentServiceImpl extends AbstractEntityService<Experiment> imp
 		view.setOwner(mapper.map(authService.getCurrentUser()));
 		Experiment experiment = mapper.map(view);
 		try {
-			EntityManager em = emProvider.get();
-			if (!em.getTransaction().isActive()) {
-				em.getTransaction().begin();
-			}
+			EntityManager em = beginTransaction();
 			em.persist(experiment);
-			em.flush();
-			em.getTransaction().commit();
+			commitTransaction(em);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

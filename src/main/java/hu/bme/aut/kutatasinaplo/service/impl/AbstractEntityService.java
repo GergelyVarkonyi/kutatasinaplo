@@ -47,4 +47,17 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 	}
 
 	protected abstract Class<T> getEntityClass();
+
+	protected EntityManager beginTransaction() {
+		EntityManager em = emProvider.get();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		return em;
+	}
+
+	protected void commitTransaction(EntityManager em) {
+		em.flush();
+		em.getTransaction().commit();
+	}
 }

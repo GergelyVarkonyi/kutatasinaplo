@@ -1,16 +1,10 @@
 package hu.bme.aut.kutatasinaplo.model;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,25 +20,13 @@ import lombok.experimental.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements AbstractEntity {
+public class KeyValuePair implements AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(unique = true)
-	private String name;
 	@Column
-	private String email;
+	private String key;
 	@Column
-	private String password;
-	@Enumerated(EnumType.STRING)
-	private Role role;
-	@OneToMany
-	private List<KeyValuePair> knowledge;
-
-	public Set<String> getRoles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	private String value;
 }
