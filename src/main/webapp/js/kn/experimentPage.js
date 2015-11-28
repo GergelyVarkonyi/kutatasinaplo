@@ -101,6 +101,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 		$http.post('rest/file/delete/attachment', {'entityId': $scope.id, 'id': idToDelete}).then(
 				// Success
 				function (resp) {
+					$scope.init();
 				},
 				// Error
 				function (resp) {
@@ -113,6 +114,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 		$http.post('rest/file/delete/image', {'entityId': $scope.id, 'id': idToDelete}).then(
 				// Success
 				function (resp) {
+					$scope.init();
 				},
 				// Error
 				function (resp) {
@@ -125,6 +127,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 		$http.post('rest/file/upload/attachment', {'id': $scope.id, 'list': $scope.addedFiles}).then(
 			// Success
 			function (resp) {
+				$scope.init();
 			},
 			// Error
 			function (resp) {
@@ -137,6 +140,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 		$http.post('rest/file/upload/images', {'id': $scope.id, 'list': $scope.addedImages}).then(
 			// Success
 			function (resp) {
+				$scope.init();
 			},
 			// Error
 			function (resp) {
