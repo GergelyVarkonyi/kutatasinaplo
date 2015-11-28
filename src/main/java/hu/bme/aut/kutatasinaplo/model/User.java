@@ -38,6 +38,8 @@ public class User implements AbstractEntity {
 	@Column
 	private String email;
 	@Column
+	private String salt;
+	@Column
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
