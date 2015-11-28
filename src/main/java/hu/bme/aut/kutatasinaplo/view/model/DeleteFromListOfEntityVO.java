@@ -9,25 +9,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Builder;
 
-@XmlRootElement(name = "file")
+@XmlRootElement(name = "listToEntityVO")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class BlobFileVO {
+public class DeleteFromListOfEntityVO {
+	@XmlElement(name = "entityId")
+	protected int entityId;
 	@XmlElement(name = "id")
 	protected int id;
-
-	@XmlElement(name = "name")
-	protected String name;
-	@XmlElement(name = "type")
-	protected String type;
-	@XmlElement(name = "size")
-	protected Long size;
-	@XmlElement(name = "data")
-	protected String data;
 }

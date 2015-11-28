@@ -15,7 +15,7 @@ import javax.persistence.criteria.Root;
 
 import com.google.common.base.Strings;
 
-public class UserServiceImpl extends AbstractEntityService<User> implements UserService {
+public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements UserService {
 
 	@Override
 	public User loadByName(String name) {
@@ -50,12 +50,6 @@ public class UserServiceImpl extends AbstractEntityService<User> implements User
 			em.getTransaction().rollback();
 			return false;
 		}
-	}
-
-	@Override
-	public boolean deleteUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

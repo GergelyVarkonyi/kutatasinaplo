@@ -4,9 +4,13 @@
 			<label for="key{{$index}}" class="key-value-pair-label">{{keyLabel}}:</label> 
 			<input type="text" class="form-control key-value-pair-key-input" id="key{{$index}}" placeholder="" ng-model="p.key">
 		</div>
-		<div class="form-group">
+		<div class="form-group" ng-if="type!=='input'">
 			<label for="value{{$index}}" class="key-value-pair-label">{{valueLabel}}:</label> 
 			<textarea class="form-control key-value-pair-description-input not-resizable" id="value{{$index}}" placeholder="" ng-model="p.value" rows="3" cols="66"> </textarea>
+		</div>
+		<div class="form-group" ng-if="type==='input'">
+			<label for="value{{$index}}" class="key-value-pair-label">{{valueLabel}}:</label> 
+			<input type="text" class="form-control key-value-pair-description-input" id="value{{$index}}" placeholder="" ng-model="p.value">
 		</div>
 	</div>
 	<button type="submit" class="btn btn-default" ng-click="addCallback()">{{buttonLabel}}</button>

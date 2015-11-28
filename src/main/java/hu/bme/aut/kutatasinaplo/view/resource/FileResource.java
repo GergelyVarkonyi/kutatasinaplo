@@ -1,8 +1,11 @@
 package hu.bme.aut.kutatasinaplo.view.resource;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
+import hu.bme.aut.kutatasinaplo.model.BlobFile;
+import hu.bme.aut.kutatasinaplo.service.BlobFileService;
 import hu.bme.aut.kutatasinaplo.service.ExperimentService;
 import hu.bme.aut.kutatasinaplo.view.model.BlobFileVO;
+import hu.bme.aut.kutatasinaplo.view.model.DeleteFromListOfEntityVO;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,7 +19,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.xml.bind.DatatypeConverter;
 
 import lombok.extern.java.Log;
 
@@ -32,11 +34,13 @@ import com.google.inject.Inject;
 public class FileResource {
 
 	private ExperimentService experimentService;
+	private BlobFileService fileService;
 	private DataViewMapper mapper;
 
 	@Inject
-	public FileResource(ExperimentService experimentService, DataViewMapper mapper) {
+	public FileResource(ExperimentService experimentService, BlobFileService fileService, DataViewMapper mapper) {
 		this.experimentService = experimentService;
+		this.fileService = fileService;
 		this.mapper = mapper;
 	}
 
@@ -80,6 +84,54 @@ public class FileResource {
 		}
 	}
 
+	@POST
+	@Path("/download/attachment")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response downloadAttachment(String id) {
+		log.info("File upload");
+		try {
+			BlobFile file = fileService.loadById(Integer.parseInt(id));
+			return Response.ok(file.getData(), file.getType()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path("/delete/attachment")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response deleteAttachment(DeleteFromListOfEntityVO ids) {
+		log.info("Attachment deleted");
+		try {
+			if (fileService.deleteAttachment(ids.getEntityId(), ids.getId())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path("/delete/image")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response deleteImage(DeleteFromListOfEntityVO ids) {
+		log.info("Image deleted");
+		try {
+			if (fileService.deleteImage(ids.getEntityId(), ids.getId())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
 	private Integer getExperimentIdFromJson(String json) throws ParseException {
 		JSONParser parser = new JSONParser();
 		ContainerFactory containerFactory = new ContainerFactoryImplementation();
@@ -103,12 +155,12 @@ public class FileResource {
 			String name = (String) file.get("name");
 			String type = (String) file.get("type");
 			Long size = (Long) file.get("size");
-			String data = (String) file.get("data");
+			String data = ((String) file.get("data")).split(",")[1];
 			fileVOs.add(BlobFileVO.builder()
 					.name(name)
 					.type(type)
 					.size(size)
-					.data(DatatypeConverter.parseBase64Binary(data))
+					.data(data)
 					.build());
 
 		}

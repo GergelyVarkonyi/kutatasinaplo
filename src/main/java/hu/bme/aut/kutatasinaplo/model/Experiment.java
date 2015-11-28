@@ -47,7 +47,7 @@ public class Experiment implements AbstractEntity {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<KeyValuePair> urls;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.MERGE)
 	private List<User> participants;
 
 	@OneToMany(cascade = CascadeType.ALL)

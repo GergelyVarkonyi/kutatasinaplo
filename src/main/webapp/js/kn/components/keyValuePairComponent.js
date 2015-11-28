@@ -10,6 +10,7 @@ app.directive('keyValuePairComponent', function() {
     	    valueLabel: '=',
     	    buttonLabel: '=',
     	    values: '=',
+    	    type: '=',
     	    addCallback: '&' 
     	},
         templateUrl: '/kutatasinaplo/components/keyValuePairComponent.html',

@@ -2,6 +2,7 @@ package hu.bme.aut.kutatasinaplo.service.impl;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.AbstractEntity;
+import hu.bme.aut.kutatasinaplo.service.AbstractEntityService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import javax.persistence.criteria.Root;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public abstract class AbstractEntityService<T extends AbstractEntity> {
+public abstract class AbstractEntityServiceImpl<T extends AbstractEntity> implements AbstractEntityService<T> {
 
 	@Inject
 	protected Provider<EntityManager> emProvider;
@@ -23,6 +24,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
 	private Class<T> clazz = getEntityClass();
 
+	@Override
 	public List<T> loadAll() {
 		EntityManager em = emProvider.get();
 
@@ -35,19 +37,13 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 		return query.getResultList();
 	}
 
+	@Override
 	public T loadById(int id) {
 		EntityManager em = emProvider.get();
 		return em.find(clazz, id);
-		// CriteriaBuilder builder = em.getCriteriaBuilder();
-		// CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
-		// Root<T> root = criteriaQuery.from(clazz);
-		// Predicate condition = builder.equal(root.get("id"), id);
-		// criteriaQuery.where(condition);
-
-		// TypedQuery<T> query = em.createQuery(criteriaQuery);
-		// return query.getSingleResult();
 	}
 
+	@Override
 	public List<T> loadByIds(List<Integer> ids) {
 		EntityManager em = emProvider.get();
 
@@ -58,6 +54,51 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
 		TypedQuery<T> query = em.createQuery(criteriaQuery);
 		return query.getResultList();
+	}
+
+	@Override
+	public boolean delete(int id) {
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.remove(loadById(id));
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean save(int id) {
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.merge(loadById(id));
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean save(T entity) {
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.merge(entity);
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
 	}
 
 	protected abstract Class<T> getEntityClass();

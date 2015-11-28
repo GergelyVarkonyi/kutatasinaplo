@@ -18,6 +18,8 @@ import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 
 import java.util.List;
 
+import javax.xml.bind.DatatypeConverter;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -173,13 +175,16 @@ public class DataViewMapper {
 			model.setPassword(view.getPwd());
 			model.setRole(view.getRole());
 
-			model.setKnowledge(Lists.transform(view.getKnowledge(), new Function<KeyValuePairVO, KeyValuePair>() {
+			List<KeyValuePairVO> knowledge = view.getKnowledge();
+			if (knowledge != null) {
+				model.setKnowledge(Lists.transform(knowledge, new Function<KeyValuePairVO, KeyValuePair>() {
 
-				@Override
-				public KeyValuePair apply(KeyValuePairVO input) {
-					return map(input);
-				}
-			}));
+					@Override
+					public KeyValuePair apply(KeyValuePairVO input) {
+						return map(input);
+					}
+				}));
+			}
 
 			return model;
 		} else {
@@ -197,13 +202,16 @@ public class DataViewMapper {
 			view.setEmail(model.getEmail());
 			view.setRole(model.getRole());
 
-			view.setKnowledge(Lists.transform(model.getKnowledge(), new Function<KeyValuePair, KeyValuePairVO>() {
+			List<KeyValuePair> knowledge = model.getKnowledge();
+			if (knowledge != null) {
+				view.setKnowledge(Lists.transform(knowledge, new Function<KeyValuePair, KeyValuePairVO>() {
 
-				@Override
-				public KeyValuePairVO apply(KeyValuePair input) {
-					return map(input);
-				}
-			}));
+					@Override
+					public KeyValuePairVO apply(KeyValuePair input) {
+						return map(input);
+					}
+				}));
+			}
 
 			return view;
 		} else {
@@ -218,20 +226,27 @@ public class DataViewMapper {
 			model.setId(view.getId());
 			model.setDescription(view.getDescription());
 			model.setName(view.getName());
-			model.setExperiments(Lists.transform(view.getExperiments(), new Function<ExperimentVO, Experiment>() {
 
-				@Override
-				public Experiment apply(ExperimentVO input) {
-					return map(input);
-				}
-			}));
-			model.setParticipants(Lists.transform(view.getParticipants(), new Function<UserVO, User>() {
+			List<ExperimentVO> experiments = view.getExperiments();
+			if (experiments != null) {
+				model.setExperiments(Lists.transform(experiments, new Function<ExperimentVO, Experiment>() {
 
-				@Override
-				public User apply(UserVO input) {
-					return map(input);
-				}
-			}));
+					@Override
+					public Experiment apply(ExperimentVO input) {
+						return map(input);
+					}
+				}));
+			}
+			List<UserVO> participants = view.getParticipants();
+			if (participants != null) {
+				model.setParticipants(Lists.transform(participants, new Function<UserVO, User>() {
+
+					@Override
+					public User apply(UserVO input) {
+						return map(input);
+					}
+				}));
+			}
 
 			return model;
 		} else {
@@ -246,20 +261,27 @@ public class DataViewMapper {
 			view.setId(model.getId());
 			view.setDescription(model.getDescription());
 			view.setName(model.getName());
-			view.setExperiments(Lists.transform(model.getExperiments(), new Function<Experiment, ExperimentVO>() {
 
-				@Override
-				public ExperimentVO apply(Experiment input) {
-					return map(input);
-				}
-			}));
-			view.setParticipants(Lists.transform(model.getParticipants(), new Function<User, UserVO>() {
+			List<Experiment> experiments = model.getExperiments();
+			if (experiments != null) {
+				view.setExperiments(Lists.transform(experiments, new Function<Experiment, ExperimentVO>() {
 
-				@Override
-				public UserVO apply(User input) {
-					return map(input);
-				}
-			}));
+					@Override
+					public ExperimentVO apply(Experiment input) {
+						return map(input);
+					}
+				}));
+			}
+			List<User> participants = model.getParticipants();
+			if (participants != null) {
+				view.setParticipants(Lists.transform(participants, new Function<User, UserVO>() {
+
+					@Override
+					public UserVO apply(User input) {
+						return map(input);
+					}
+				}));
+			}
 
 			return view;
 		} else {
@@ -300,7 +322,7 @@ public class DataViewMapper {
 			BlobFile model = new BlobFile();
 
 			model.setId(view.getId());
-			model.setData(view.getData());
+			model.setData(DatatypeConverter.parseBase64Binary(view.getData()));
 			model.setType(view.getType());
 			;
 			model.setSize(view.getSize());
@@ -317,7 +339,7 @@ public class DataViewMapper {
 			BlobFileVO view = new BlobFileVO();
 
 			view.setId(model.getId());
-			view.setData(model.getData());
+			view.setData(DatatypeConverter.printBase64Binary(model.getData()));
 			view.setType(model.getType());
 			view.setSize(model.getSize());
 			view.setName(model.getName());

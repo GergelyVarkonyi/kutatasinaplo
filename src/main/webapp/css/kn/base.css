@@ -89,3 +89,38 @@
     cursor: inherit;
     display: block;
 }
+
+.left-panel{
+	float: left;
+	width: 45%;
+}
+
+.right-panel{
+	float: right;
+	width: 45%;
+	margin-left: 15px;
+}
+
+.after-devided-panels {
+	clear: both;
+}
+
+.image-container {
+	display: inline-block;
+	width: 250px;
+}
+
+.image-inner-div {
+	margin: 20px auto;
+	width: 200px;
+	
+}
+
+.image-label {
+	text-align: center;
+	width: 200px;
+}
+
+.clickable {
+	cursor: pointer;
+}

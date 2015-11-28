@@ -19,7 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class ExperimentServiceImpl extends AbstractEntityService<Experiment> implements ExperimentService {
+public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment> implements ExperimentService {
 
 	@Inject
 	private AuthService authService;
@@ -49,27 +49,16 @@ public class ExperimentServiceImpl extends AbstractEntityService<Experiment> imp
 	}
 
 	@Override
-	public boolean delete(int id) {
+	public boolean setParticipants(int experimentId, List<Integer> participantsIds) {
 		EntityManager em = null;
 		try {
-			em = beginTransaction();
-			em.remove(loadById(id));
-			commitTransaction(em);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			em.getTransaction().rollback();
-			return false;
-		}
-	}
-
-	@Override
-	public boolean addParticipants(int experimentId, List<Integer> participantsIds) {
-		EntityManager em = null;
-		try {
-			List<User> users = userService.loadByIds(participantsIds);
 			Experiment experiment = loadById(experimentId);
-			experiment.getParticipants().addAll(users);
+			if (participantsIds != null && !participantsIds.isEmpty()) {
+				List<User> users = userService.loadByIds(participantsIds);
+				experiment.setParticipants(users);
+			} else {
+				experiment.setParticipants(Lists.<User> newArrayList());
+			}
 
 			em = beginTransaction();
 			em.persist(experiment);
@@ -144,6 +133,22 @@ public class ExperimentServiceImpl extends AbstractEntityService<Experiment> imp
 			if (em != null) {
 				em.getTransaction().rollback();
 			}
+			return false;
+		}
+	}
+
+	@Override
+	public boolean save(ExperimentVO view) {
+		Experiment experiment = mapper.map(view);
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.persist(experiment);
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
 			return false;
 		}
 	}

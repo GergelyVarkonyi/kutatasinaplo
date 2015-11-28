@@ -102,12 +102,29 @@ public class ExperimentResource {
 	}
 
 	@POST
-	@Path("/add/participants")
+	@Path("/set/participants")
 	@Produces(value = MediaType.APPLICATION_JSON)
-	public Response addParticipants(AddListToEntityVO view) {
+	public Response setParticipants(AddListToEntityVO view) {
 		log.info("Add participants " + view.getIds());
 		try {
-			if (experimentService.addParticipants(view.getEntityId(), view.getIds())) {
+			if (experimentService.setParticipants(view.getEntityId(), view.getIds())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path("/save")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response setParticipants(ExperimentVO view) {
+		log.info("Save experiment " + view.getId());
+		try {
+			if (experimentService.save(view)) {
 				return Response.ok().build();
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();

@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" type="text/css" href="css/kn/base.css">
 <link rel="stylesheet" type="text/css" href="css/kn/header.css">
+<link rel="stylesheet" type="text/css" href="css/kn/experimentPage.css">
 
 <script src="js/jquery/jquery-2.1.4.min.js"></script>
 <script src="js/angular/angular.min.js"></script>
@@ -35,9 +36,13 @@
 					<span class="label label-primary page-title-label" ng-if='data.public == "true"'>Public</span>
 					<span class="label label-warning page-title-label" ng-if='data.public == "false"'>Private</span>
 				</h2>
-				<button class="btn btn-default page-title-button" type="submit" ng-click="edit()">
+				<button class="btn btn-default page-title-button" type="submit" ng-click="edit()" ng-if="!inEditorMode">
 					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 					Edit
+				</button>
+				<button class="btn btn-success page-title-button" type="submit" ng-click="save()" ng-if="inEditorMode">
+					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+					Save
 				</button>
 				<button class="btn btn-default page-title-button" type="submit" ng-click="slideDownAdder()">
 					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -49,7 +54,7 @@
 				  <div class="row">
 					  <div class="col-xs-5">
 					    <select name="from" id="multiselect" class="form-control" size="8" multiple="multiple">
-					      <option value="{{u.id}}" ng-repeat="u in users">{{u.name}}</option>
+					        <option value="{{u.id}}" ng-repeat="u in canParticipate">{{u.name}}</option>
 					    </select>
 					  </div>
 					  <div class="col-xs-2">
@@ -60,10 +65,11 @@
 					  </div>
 					  <div class="col-xs-5">
 					    <select name="to" id="multiselect_to" class="form-control" size="8" multiple="multiple">
+					        <option value="{{u.id}}" ng-repeat="u in data.participants">{{u.name}}</option>
 					    </select>
 					  </div>
 					</div>
-				  <button type="submit" class="btn btn-success" ng-click="addParticipants()">Save</button>
+				  <button type="submit" class="btn btn-success" ng-click="setParticipants()">Save</button>
 				  <button type="submit" class="btn btn-warning" ng-click="slideUpAdder()">Cancel</button>
 				</form>
 			</div>
@@ -78,57 +84,113 @@
 					<textarea class="not-resizable form-control" rows="6" cols="100" ng-model="data.description">{{data.description}}</textarea>
 				</div>
 				
-				<h4>
-					Owner
-				</h4>
-				<span ng-if="!inEditorMode">
-					{{data.owner.name}}
-				</span>
-				<div ng-if="inEditorMode" class="form-group" >
-					<select class="form-control">
-					    <option value="{{u}}" ng-repeat="u in users" ng-model="data.owner">{{u.name}}</option>
-					</select>
+				<hr/>
+				
+				<div class="left-panel">
+					<h4>
+						Owner
+					</h4>
+					<span ng-if="!inEditorMode">
+						{{data.owner.name}}
+					</span>
+					<div ng-if="inEditorMode" class="form-group" >
+						<select class="form-control">
+						    <option value="{{u}}" ng-repeat="u in users" ng-model="data.owner">{{u.name}}</option>
+						</select>
+					</div>
 				</div>
 				
-				<h4>
-					Participants
-				</h4>
-				<p ng-repeat="p in data.participants">
-					{{p.name}}
-				</p>
-				
-				<h4>
-					Files
-				</h4>
-				<div ng-if="!inEditorMode">
-					<p ng-repeat="f in data.attachments">
-						{{f.name}}
+				<div class="right-panel">
+					<h4>
+						Participants
+					</h4>
+					<p ng-repeat="p in data.participants">
+						{{p.name}}
 					</p>
 				</div>
-				<div ng-if="inEditorMode" class="form-group" >
-					<div>
-						<p ng-repeat="f in addedFiles">
+				
+				<div class="after-devided-panels"></div>
+				<hr/>
+				
+				<div class="left-panel">
+					<h4>
+						Files
+					</h4>
+					<div ng-if="!inEditorMode">
+						<p ng-repeat="f in data.attachments">
 							{{f.name}}
 						</p>
 					</div>
-					<div class="input-group">
-		                <span class="file-input btn btn-primary btn-file">
-			                Browse&hellip; <input id="attachmentInput" type="file" onchange="angular.element(this).scope().attachmentChanged(this)">
-			            </span>
-			            <button type="submit" class="btn btn-success" ng-click="uploadAddedFiles()">Upload</button>
-		            </div>
+					<div ng-if="inEditorMode" class="form-group" >
+						<div>
+							Already uploaded
+							<p ng-repeat="f in data.attachments">
+								{{f.name}} <span class="glyphicon glyphicon-trash clickable" aria-hidden="true" ng-click="deleteAttachment(f.id)"></span>
+							</p>
+						</div>
+						<div>
+							New
+							<p ng-repeat="f in addedFiles">
+								{{f.name}}
+							</p>
+						</div>
+						<div class="input-group">
+			                <span class="file-input btn btn-primary btn-file">
+				                Browse&hellip; <input id="attachmentInput" type="file" onchange="angular.element(this).scope().attachmentChanged(this)">
+				            </span>
+				            <button type="submit" class="btn btn-success" ng-click="uploadAddedFiles()">Upload</button>
+			            </div>
+					</div>
 				</div>
+				
+				<div class="right-panel">
+					<h4>
+						Urls
+					</h4>
+					<span ng-if="!inEditorMode">
+					<p ng-repeat="u in data.urls">
+						<a class="btn btn-link" href="{{u.value}}">{{u.key}}</a>
+					</p>
+					</span>
+					<div ng-if="inEditorMode" class="form-group" >
+						<key-value-pair-component 
+							id="urls" 
+							values="data.urls" 
+							key-label="'Label'" 
+							value-label="'Url'" 
+							button-label="'Add'" 
+							add-callback="addNewUrl()"
+							type="'input'">
+						</key-value-pair-component>
+					</div>
+				</div>
+				
+				<div class="after-devided-panels"></div>
+				<hr/>
 				
 				<h4>
 					Images
 				</h4>
 				<div ng-if="!inEditorMode">
-					<p ng-repeat="f in data.images">
-						{{f.name}}
-					</p>
+					<div ng-repeat="f in data.images" class="image-container">
+						<div class="image-inner-div" >
+							<img alt="Embedded Image" src="data:image/png;base64,{{f.data}}" class="experiment-image" />
+							<br/>
+							<p class="image-label">
+								{{f.name}}
+							</p>
+						</div>
+					</div>
 				</div>
 				<div ng-if="inEditorMode" class="form-group" >
 					<div>
+						Already uploaded
+						<p ng-repeat="f in data.images">
+							{{f.name}} <span class="glyphicon glyphicon-trash clickable" aria-hidden="true" ng-click="deleteImage(f.id)"></span>
+						</p>
+					</div>
+					<div>
+						New
 						<p ng-repeat="f in addedImages">
 							{{f.name}}
 						</p>
@@ -141,18 +203,6 @@
 		            </div>
 				</div>
 								
-				<h4>
-					Urls
-				</h4>
-				<span ng-if="!inEditorMode">
-				<p ng-repeat="u in data.urls">
-					<a class="btn btn-link" href="{{u.value}}">{{u.key}}</a>
-				</p>
-				</span>
-				<div ng-if="inEditorMode" class="form-group" >
-					<key-value-pair-component id="urls" values="data.urls" key-label="'Label'" value-label="'Url'" button-label="'Add'" add-callback="addNewUrl()">
-					</key-value-pair-component>
-				</div>
 			</div>
 		</div>
 	</div>
