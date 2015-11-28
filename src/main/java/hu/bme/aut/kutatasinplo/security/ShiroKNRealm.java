@@ -12,10 +12,13 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.SimpleByteSource;
 
 import com.google.inject.Inject;
 
@@ -25,13 +28,14 @@ public class ShiroKNRealm extends AuthorizingRealm {
 
 	private KNSecurityManagerService securityManagerService;
 
-	private UserService userService;
-
 	@Inject
 	public ShiroKNRealm(UserService userService) {
 		// This is the thing that knows how to find user creds and roles
-		this.userService = userService;
 		this.securityManagerService = new KNSecurityManagerService(userService);
+		HashedCredentialsMatcher authenticator = new HashedCredentialsMatcher(Sha512Hash.ALGORITHM_NAME);
+		authenticator.setHashIterations(10);
+		authenticator.setStoredCredentialsHexEncoded(false);
+		setCredentialsMatcher(authenticator);
 	}
 
 	@Override
@@ -79,7 +83,9 @@ public class ShiroKNRealm extends AuthorizingRealm {
 			logger.fine("Principal found for authenticating user with username: " + usernamePasswordToken.getUsername());
 		}
 
-		return new SimpleAccount(principal.getName(), principal.getPassword(), getName(),
+		SimpleAccount simpleAccount = new SimpleAccount(principal.getName(), principal.getPassword(), getName(),
 				principal.getRoles(), new HashSet());
+		simpleAccount.setCredentialsSalt(new SimpleByteSource(principal.getSalt()));
+		return simpleAccount;
 	}
 }

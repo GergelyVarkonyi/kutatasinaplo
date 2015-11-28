@@ -1,19 +1,22 @@
 package hu.bme.aut.kutatasinaplo.db;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
-
 import hu.bme.aut.kutatasinaplo.model.Experiment;
 import hu.bme.aut.kutatasinaplo.model.ExperimentType;
 import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
 import hu.bme.aut.kutatasinaplo.model.Role;
 import hu.bme.aut.kutatasinaplo.model.User;
+
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+import org.apache.shiro.crypto.hash.Sha512Hash;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 public class InitDB {
 	@Test
@@ -24,18 +27,25 @@ public class InitDB {
 		new SchemaExport(configuration).create(true, true);
 
 		EntityManager em = Persistence.createEntityManagerFactory("kutatasiNaploPU").createEntityManager();
+
+		String salt = UUID.randomUUID().toString();
+		Sha512Hash sha512Hash = new Sha512Hash("0000", salt, 10);
 		User admin = User.builder()
 				.name("admin")
 				.email("admin@nodomain.com")
-				.password("0000")
+				.password(sha512Hash.toBase64())
 				.role(Role.ADMIN)
+				.salt(salt)
 				.build();
 
+		salt = UUID.randomUUID().toString();
+		sha512Hash = new Sha512Hash("0000", salt, 10);
 		User user = User.builder()
 				.name("test")
 				.email("test@nodomain.com")
-				.password("0000")
+				.password(sha512Hash.toBase64())
 				.role(Role.USER)
+				.salt(salt)
 				.build();
 
 		Experiment publicExp = Experiment.builder()
