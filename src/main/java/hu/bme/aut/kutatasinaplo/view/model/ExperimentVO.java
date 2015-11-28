@@ -30,7 +30,11 @@ public class ExperimentVO {
 	@XmlElement(name = "public")
 	protected boolean isPublic;
 	@XmlElement(name = "urls")
-	protected List<UrlVO> urls;
+	protected List<KeyValuePairVO> urls;
 	@XmlElement(name = "participants")
 	protected List<UserVO> participants;
+	@XmlElement(name = "attachments")
+	protected List<BlobFileVO> attachments;
+	@XmlElement(name = "images")
+	protected List<BlobFileVO> images;
 }

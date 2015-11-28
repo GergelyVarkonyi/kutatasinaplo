@@ -16,6 +16,7 @@
 
 .page-title {
 	display: inline-block;
+	width: 600px;
 }
 
 .page-title-button {
@@ -27,6 +28,7 @@
 .page-title-label {
 	margin-left: 15px;
     vertical-align: text-top;
+    float: right;
 }
 
 .not-resizable {
@@ -55,4 +57,35 @@
 
 .key-value-pair {
 	margin-bottom: 10px;
+}
+
+.inline-input-span {
+	overflow:auto;
+    display:inline-block;
+    width: 250px;
+    vertical-align: bottom;
+}
+
+.inline-input {
+	float: left;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }

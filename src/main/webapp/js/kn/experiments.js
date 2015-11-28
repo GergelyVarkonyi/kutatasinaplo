@@ -36,6 +36,19 @@ app.controller('ExperimentsController', ['$scope', '$http', function($scope, $ht
 			);
 	}
 	
+	$scope.delete = function(id) {
+		$http.post('rest/experiment/delete', {'id' : id}).then(
+				// Success
+				function (resp) {
+					init();
+				},
+				// Error
+				function (resp) {
+					
+				}
+			);
+	}
+	
 	$scope.load = function(id) {
 		window.location = window.location.origin + "/kutatasinaplo/experimentPage.html?id="+id; 
 	}
@@ -52,6 +65,9 @@ app.controller('ExperimentsController', ['$scope', '$http', function($scope, $ht
 								$scope.experiments[0] = experimentsData;
 							}
 						}
+						$("#new-experiment-name").val('');
+						$("#new-experiment-description").val('');
+						$("#new-experiment-public").attr('checked', false);
 					},
 					// Error
 					function (resp) {

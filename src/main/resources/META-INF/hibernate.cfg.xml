@@ -18,6 +18,7 @@
         <mapping class="hu.bme.aut.kutatasinaplo.model.Experiment"/>
         <mapping class="hu.bme.aut.kutatasinaplo.model.Url"/>
         <mapping class="hu.bme.aut.kutatasinaplo.model.KeyValuePair"/>
+        <mapping class="hu.bme.aut.kutatasinaplo.model.BlobFile"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -16,4 +16,6 @@ public interface UserService {
 
 	public boolean deleteUser(User user);
 
+	public List<User> loadByIds(List<Integer> ids);
+
 }

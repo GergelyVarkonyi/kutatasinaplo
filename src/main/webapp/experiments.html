@@ -61,6 +61,7 @@
 						    <th>Name</th>
 						    <th>Description</th>
 						    <th>Owner</th>
+						    <th></th>
 					    </tr>
 					</thead>
 					<tbody>
@@ -69,6 +70,7 @@
 				            <td>{{exp.name}}</td>
 				            <td>{{exp.description}}</td>
 				            <td>{{exp.owner.name}}</td>
+				            <td><button type="submit" class="btn btn-danger" ng-click="delete(exp.id); $event.stopPropagation();">Delete</button></td>
 				        </tr>
 			        </tbody>
 				</table>

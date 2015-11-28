@@ -1,13 +1,16 @@
 package hu.bme.aut.kutatasinaplo.mapper;
 
 import hu.bme.aut.kutatasinaplo.model.AbstractEntity;
+import hu.bme.aut.kutatasinaplo.model.BlobFile;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
 import hu.bme.aut.kutatasinaplo.model.ExperimentType;
 import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
 import hu.bme.aut.kutatasinaplo.model.Project;
 import hu.bme.aut.kutatasinaplo.model.Url;
 import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.view.model.BlobFileVO;
 import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
+import hu.bme.aut.kutatasinaplo.view.model.IdVO;
 import hu.bme.aut.kutatasinaplo.view.model.KeyValuePairVO;
 import hu.bme.aut.kutatasinaplo.view.model.ProjectVO;
 import hu.bme.aut.kutatasinaplo.view.model.UrlVO;
@@ -40,12 +43,32 @@ public class DataViewMapper {
 					}
 				}));
 			}
-			List<UrlVO> urls = view.getUrls();
+			List<KeyValuePairVO> urls = view.getUrls();
 			if (urls != null) {
-				model.setUrls(Lists.transform(urls, new Function<UrlVO, Url>() {
+				model.setUrls(Lists.transform(urls, new Function<KeyValuePairVO, KeyValuePair>() {
 
 					@Override
-					public Url apply(UrlVO input) {
+					public KeyValuePair apply(KeyValuePairVO input) {
+						return map(input);
+					}
+				}));
+			}
+			List<BlobFileVO> attachments = view.getAttachments();
+			if (attachments != null) {
+				model.setAttachments(Lists.transform(attachments, new Function<BlobFileVO, BlobFile>() {
+
+					@Override
+					public BlobFile apply(BlobFileVO input) {
+						return map(input);
+					}
+				}));
+			}
+			List<BlobFileVO> images = view.getImages();
+			if (images != null) {
+				model.setImages(Lists.transform(images, new Function<BlobFileVO, BlobFile>() {
+
+					@Override
+					public BlobFile apply(BlobFileVO input) {
 						return map(input);
 					}
 				}));
@@ -77,12 +100,32 @@ public class DataViewMapper {
 					}
 				}));
 			}
-			List<Url> urls = model.getUrls();
+			List<KeyValuePair> urls = model.getUrls();
 			if (urls != null) {
-				view.setUrls(Lists.transform(urls, new Function<Url, UrlVO>() {
+				view.setUrls(Lists.transform(urls, new Function<KeyValuePair, KeyValuePairVO>() {
 
 					@Override
-					public UrlVO apply(Url input) {
+					public KeyValuePairVO apply(KeyValuePair input) {
+						return map(input);
+					}
+				}));
+			}
+			List<BlobFile> attachments = model.getAttachments();
+			if (attachments != null) {
+				view.setAttachments(Lists.transform(attachments, new Function<BlobFile, BlobFileVO>() {
+
+					@Override
+					public BlobFileVO apply(BlobFile input) {
+						return map(input);
+					}
+				}));
+			}
+			List<BlobFile> images = model.getImages();
+			if (images != null) {
+				view.setImages(Lists.transform(images, new Function<BlobFile, BlobFileVO>() {
+
+					@Override
+					public BlobFileVO apply(BlobFile input) {
 						return map(input);
 					}
 				}));
@@ -252,6 +295,39 @@ public class DataViewMapper {
 		}
 	}
 
+	public BlobFile map(BlobFileVO view) {
+		if (isViewMappable(view)) {
+			BlobFile model = new BlobFile();
+
+			model.setId(view.getId());
+			model.setData(view.getData());
+			model.setType(view.getType());
+			;
+			model.setSize(view.getSize());
+			model.setName(view.getName());
+
+			return model;
+		} else {
+			return null;
+		}
+	}
+
+	public BlobFileVO map(BlobFile model) {
+		if (isModelMappable(model)) {
+			BlobFileVO view = new BlobFileVO();
+
+			view.setId(model.getId());
+			view.setData(model.getData());
+			view.setType(model.getType());
+			view.setSize(model.getSize());
+			view.setName(model.getName());
+
+			return view;
+		} else {
+			return null;
+		}
+	}
+
 	private boolean isModelMappable(AbstractEntity model) {
 		return model != null;
 	}
@@ -260,4 +336,15 @@ public class DataViewMapper {
 		return view != null;
 	}
 
+	public static final class IdVOToIntegerFunction implements Function<IdVO, Integer> {
+		public static final IdVOToIntegerFunction INSTANCE = new IdVOToIntegerFunction();
+
+		private IdVOToIntegerFunction() {
+		}
+
+		@Override
+		public Integer apply(IdVO input) {
+			return input.getId();
+		}
+	}
 }

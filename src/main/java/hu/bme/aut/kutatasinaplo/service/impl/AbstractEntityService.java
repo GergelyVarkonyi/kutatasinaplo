@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.google.inject.Inject;
@@ -38,15 +37,27 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
 	public T loadById(int id) {
 		EntityManager em = emProvider.get();
+		return em.find(clazz, id);
+		// CriteriaBuilder builder = em.getCriteriaBuilder();
+		// CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
+		// Root<T> root = criteriaQuery.from(clazz);
+		// Predicate condition = builder.equal(root.get("id"), id);
+		// criteriaQuery.where(condition);
+
+		// TypedQuery<T> query = em.createQuery(criteriaQuery);
+		// return query.getSingleResult();
+	}
+
+	public List<T> loadByIds(List<Integer> ids) {
+		EntityManager em = emProvider.get();
 
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
 		Root<T> root = criteriaQuery.from(clazz);
-		Predicate condition = builder.equal(root.get("id"), id);
-		criteriaQuery.where(condition);
+		criteriaQuery.select(root).where(root.get("id").in(ids));
 
 		TypedQuery<T> query = em.createQuery(criteriaQuery);
-		return query.getSingleResult();
+		return query.getResultList();
 	}
 
 	protected abstract Class<T> getEntityClass();

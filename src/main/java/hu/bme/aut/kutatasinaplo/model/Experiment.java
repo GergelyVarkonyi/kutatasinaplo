@@ -1,5 +1,6 @@
 package hu.bme.aut.kutatasinaplo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -19,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Builder;
 
 @Entity
 @Table
@@ -26,6 +29,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Experiment implements AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,10 +45,31 @@ public class Experiment implements AbstractEntity {
 	private ExperimentType type;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Url> urls;
+	private List<KeyValuePair> urls;
 
 	@ManyToMany
 	private List<User> participants;
 
-	// TODO képek és fájlok
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "experiment_attachment")
+	private List<BlobFile> attachments;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "experiment_image")
+	private List<BlobFile> images;
+
+	public void setParticipants(List<User> participants) {
+		List<User> eager = new ArrayList<User>(participants);
+		this.participants = eager;
+	}
+
+	public void setAttachments(List<BlobFile> attachments) {
+		List<BlobFile> eager = new ArrayList<BlobFile>(attachments);
+		this.attachments = eager;
+	}
+
+	public void setImages(List<BlobFile> images) {
+		List<BlobFile> eager = new ArrayList<BlobFile>(images);
+		this.images = eager;
+	}
+
 }

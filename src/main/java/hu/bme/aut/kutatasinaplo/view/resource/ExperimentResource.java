@@ -3,7 +3,9 @@ package hu.bme.aut.kutatasinaplo.view.resource;
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
 import hu.bme.aut.kutatasinaplo.service.ExperimentService;
+import hu.bme.aut.kutatasinaplo.view.model.AddListToEntityVO;
 import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
+import hu.bme.aut.kutatasinaplo.view.model.IdVO;
 
 import java.util.List;
 
@@ -79,5 +81,40 @@ public class ExperimentResource {
 				return mapper.map(input);
 			}
 		});
+	}
+
+	@POST
+	@Path("/delete")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response delete(IdVO view) {
+		int id = view.getId();
+		log.info("Delete experiment: " + id);
+		try {
+			if (experimentService.delete(id)) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path("/add/participants")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response addParticipants(AddListToEntityVO view) {
+		log.info("Add participants " + view.getIds());
+		try {
+			if (experimentService.addParticipants(view.getEntityId(), view.getIds())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
 	}
 }

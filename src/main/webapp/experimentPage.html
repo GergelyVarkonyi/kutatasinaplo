@@ -15,6 +15,7 @@
 <script src="js/kn/base.js"></script>
 <script src="js/kn/components/header.js"></script>
 <script src="js/kn/experimentPage.js"></script>
+<script src="js/kn/components/keyValuePairComponent.js"></script>
 
 <title>Kutatasi naplo - index</title>
 </head>
@@ -26,7 +27,11 @@
 		<div class="page-content">
 			<div class="page-title-container">
 				<h2 class="page-title">
-					Experiment: {{data.name}}
+					<span>Experiment:</span>
+					<span class="inline-input-span" ng-if="!inEditorMode">{{data.name}}</span>
+					<span class="inline-input-span" ng-if="inEditorMode">
+						<input id="name" type="text" class="form-control inline-input" placeholder="Name" ng-model="data.name" value="{{data.name}}">
+					</span>
 					<span class="label label-primary page-title-label" ng-if='data.public == "true"'>Public</span>
 					<span class="label label-warning page-title-label" ng-if='data.public == "false"'>Private</span>
 				</h2>
@@ -58,7 +63,7 @@
 					    </select>
 					  </div>
 					</div>
-				  <button type="submit" class="btn btn-success" ng-click="save()">Save</button>
+				  <button type="submit" class="btn btn-success" ng-click="addParticipants()">Save</button>
 				  <button type="submit" class="btn btn-warning" ng-click="slideUpAdder()">Cancel</button>
 				</form>
 			</div>
@@ -66,24 +71,88 @@
 				<h4>
 					Description
 				</h4>
-				{{data.description}}
+				<span ng-if="!inEditorMode">
+					{{data.description}}
+				</span>
+				<div ng-if="inEditorMode" class="form-group" >
+					<textarea class="not-resizable form-control" rows="6" cols="100" ng-model="data.description">{{data.description}}</textarea>
+				</div>
+				
 				<h4>
 					Owner
 				</h4>
-				{{data.owner.name}}
+				<span ng-if="!inEditorMode">
+					{{data.owner.name}}
+				</span>
+				<div ng-if="inEditorMode" class="form-group" >
+					<select class="form-control">
+					    <option value="{{u}}" ng-repeat="u in users" ng-model="data.owner">{{u.name}}</option>
+					</select>
+				</div>
+				
 				<h4>
 					Participants
 				</h4>
-				{{data.owner.participants}}
+				<p ng-repeat="p in data.participants">
+					{{p.name}}
+				</p>
+				
 				<h4>
 					Files
 				</h4>
+				<div ng-if="!inEditorMode">
+					<p ng-repeat="f in data.attachments">
+						{{f.name}}
+					</p>
+				</div>
+				<div ng-if="inEditorMode" class="form-group" >
+					<div>
+						<p ng-repeat="f in addedFiles">
+							{{f.name}}
+						</p>
+					</div>
+					<div class="input-group">
+		                <span class="file-input btn btn-primary btn-file">
+			                Browse&hellip; <input id="attachmentInput" type="file" onchange="angular.element(this).scope().attachmentChanged(this)">
+			            </span>
+			            <button type="submit" class="btn btn-success" ng-click="uploadAddedFiles()">Upload</button>
+		            </div>
+				</div>
+				
 				<h4>
 					Images
 				</h4>
+				<div ng-if="!inEditorMode">
+					<p ng-repeat="f in data.images">
+						{{f.name}}
+					</p>
+				</div>
+				<div ng-if="inEditorMode" class="form-group" >
+					<div>
+						<p ng-repeat="f in addedImages">
+							{{f.name}}
+						</p>
+					</div>
+					<div class="input-group">
+		                <span class="file-input btn btn-primary btn-file">
+			                Browse&hellip; <input id="attachmentInput" type="file" onchange="angular.element(this).scope().imageChanged(this)">
+			            </span>
+			            <button type="submit" class="btn btn-success" ng-click="uploadAddedImages()">Upload</button>
+		            </div>
+				</div>
+								
 				<h4>
 					Urls
 				</h4>
+				<span ng-if="!inEditorMode">
+				<p ng-repeat="u in data.urls">
+					<a class="btn btn-link" href="{{u.value}}">{{u.key}}</a>
+				</p>
+				</span>
+				<div ng-if="inEditorMode" class="form-group" >
+					<key-value-pair-component id="urls" values="data.urls" key-label="'Label'" value-label="'Url'" button-label="'Add'" add-callback="addNewUrl()">
+					</key-value-pair-component>
+				</div>
 			</div>
 		</div>
 	</div>
