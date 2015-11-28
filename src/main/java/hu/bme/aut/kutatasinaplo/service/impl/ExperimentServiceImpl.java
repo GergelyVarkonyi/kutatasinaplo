@@ -87,18 +87,25 @@ public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment>
 	public boolean attachFiles(int experimentId, List<BlobFileVO> files) {
 		EntityManager em = null;
 		try {
-			Experiment experiment = loadById(experimentId);
-			experiment.getAttachments().addAll(Lists.transform(files, new Function<BlobFileVO, BlobFile>() {
+			List<BlobFile> transformedFiles = Lists.transform(files, new Function<BlobFileVO, BlobFile>() {
 
 				@Override
 				public BlobFile apply(BlobFileVO input) {
 					return mapper.map(input);
 				}
 
-			}));
+			});
+
+			Experiment experiment = loadById(experimentId);
+			List<BlobFile> attachments = experiment.getAttachments();
+			if (attachments != null) {
+				attachments.addAll(transformedFiles);
+			} else {
+				experiment.setAttachments(transformedFiles);
+			}
 
 			em = beginTransaction();
-			em.persist(experiment);
+			em.merge(experiment);
 			commitTransaction(em);
 			return true;
 		} catch (Exception e) {
@@ -111,21 +118,28 @@ public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment>
 	}
 
 	@Override
-	public boolean attachImages(int experimentId, List<BlobFileVO> images) {
+	public boolean attachImages(int experimentId, List<BlobFileVO> files) {
 		EntityManager em = null;
 		try {
-			Experiment experiment = loadById(experimentId);
-			experiment.getImages().addAll(Lists.transform(images, new Function<BlobFileVO, BlobFile>() {
+			List<BlobFile> transformedImages = Lists.transform(files, new Function<BlobFileVO, BlobFile>() {
 
 				@Override
 				public BlobFile apply(BlobFileVO input) {
 					return mapper.map(input);
 				}
 
-			}));
+			});
+
+			Experiment experiment = loadById(experimentId);
+			List<BlobFile> images = experiment.getImages();
+			if (images != null) {
+				images.addAll(transformedImages);
+			} else {
+				experiment.setImages(transformedImages);
+			}
 
 			em = beginTransaction();
-			em.persist(experiment);
+			em.merge(experiment);
 			commitTransaction(em);
 			return true;
 		} catch (Exception e) {
@@ -140,10 +154,13 @@ public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment>
 	@Override
 	public boolean save(ExperimentVO view) {
 		Experiment experiment = mapper.map(view);
+		User owner = userService.loadById(view.getOwner().getId());
+		experiment.setOwner(owner);
+
 		EntityManager em = null;
 		try {
 			em = beginTransaction();
-			em.persist(experiment);
+			em.merge(experiment);
 			commitTransaction(em);
 			return true;
 		} catch (Exception e) {

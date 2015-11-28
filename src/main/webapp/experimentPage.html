@@ -94,8 +94,9 @@
 						{{data.owner.name}}
 					</span>
 					<div ng-if="inEditorMode" class="form-group" >
-						<select class="form-control">
-						    <option value="{{u}}" ng-repeat="u in users" ng-model="data.owner">{{u.name}}</option>
+						<select class="form-control" ng-model="data.owner" ng-options="u as u.name for u in users ">
+<!-- 						    <option ng-value="u" ng-repeat="u in users">{{u.name}}</option> -->
+								<option value="" disabled selected>{{data.owner.name}}</option>
 						</select>
 					</div>
 				</div>
@@ -125,7 +126,7 @@
 						<div>
 							Already uploaded
 							<p ng-repeat="f in data.attachments">
-								{{f.name}} <span class="glyphicon glyphicon-trash clickable" aria-hidden="true" ng-click="deleteAttachment(f.id)"></span>
+								{{f.name}} <span class="glyphicon glyphicon-trash clickable  trash-icon" aria-hidden="true" ng-click="deleteAttachment(f.id)"></span>
 							</p>
 						</div>
 						<div>
@@ -160,6 +161,7 @@
 							value-label="'Url'" 
 							button-label="'Add'" 
 							add-callback="addNewUrl()"
+							delete-callback="removeUrl"
 							type="'input'">
 						</key-value-pair-component>
 					</div>
@@ -186,7 +188,7 @@
 					<div>
 						Already uploaded
 						<p ng-repeat="f in data.images">
-							{{f.name}} <span class="glyphicon glyphicon-trash clickable" aria-hidden="true" ng-click="deleteImage(f.id)"></span>
+							{{f.name}} <span class="glyphicon glyphicon-trash clickable trash-icon" aria-hidden="true" ng-click="deleteImage(f.id)"></span>
 						</p>
 					</div>
 					<div>

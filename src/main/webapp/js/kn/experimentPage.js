@@ -52,6 +52,17 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 		$scope.data.urls.push({'key':'', 'value':''})
 	}
 	
+	$scope.removeUrl = function(pair) {
+	   var i;
+	   var indexOfElement;
+	   for (i = 0; i < $scope.data.urls.length; ++i) {
+			if($scope.data.urls[i].id == pair.id) {
+				indexOfElement = i;
+			}
+	   }
+	   $scope.data.urls.splice(indexOfElement,1);
+	}
+	
 	$scope.attachmentChanged = function(element) {
 
 	     $scope.$apply(function(scope) {
@@ -204,6 +215,11 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 										$scope.users[0] = userData;
 									}
 									
+//									$scope.users = jQuery.grep($scope.users, function(value) {
+//										var ownerId = angular.element('[ng-controller=ExperimentController]').scope().data.owner.id;
+//										return value.id != ownerId;
+//									});
+
 									$scope.canParticipate = jQuery.grep($scope.users, function(value) {
 										   var participants = angular.element('[ng-controller=ExperimentController]').scope().data.participants;
 										   var index;
@@ -214,6 +230,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 										   }
 										   return true;
 										});
+									
 								},
 								// Error
 								function (resp) {

@@ -11,7 +11,8 @@ app.directive('keyValuePairComponent', function() {
     	    buttonLabel: '=',
     	    values: '=',
     	    type: '=',
-    	    addCallback: '&' 
+    	    addCallback: '&',
+    	    deleteCallback: '='
     	},
         templateUrl: '/kutatasinaplo/components/keyValuePairComponent.html',
         restrict: 'E',

@@ -1,5 +1,6 @@
 <div class="key-value-pair">
 	<div class="key-value-pair-container form-inline" ng-repeat="p in values">
+		<span class="glyphicon glyphicon-trash clickable key-value-pair-trash-icon trash-icon" aria-hidden="true" ng-click="deleteCallback(p)"></span>
 		<div class="form-group">
 			<label for="key{{$index}}" class="key-value-pair-label">{{keyLabel}}:</label> 
 			<input type="text" class="form-control key-value-pair-key-input" id="key{{$index}}" placeholder="" ng-model="p.key">

@@ -124,3 +124,11 @@
 .clickable {
 	cursor: pointer;
 }
+
+.key-value-pair-trash-icon {
+	float:right;
+}
+
+.trash-icon {
+	color:red;
+}
