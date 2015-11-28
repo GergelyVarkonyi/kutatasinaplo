@@ -119,7 +119,7 @@
 					</h4>
 					<div ng-if="!inEditorMode">
 						<p ng-repeat="f in data.attachments">
-							{{f.name}}
+							<a href="../kutatasinaplo/rest/file/download/attachment?id={{f.id}}" class="btn btn-link">{{f.name}}</a>
 						</p>
 					</div>
 					<div ng-if="inEditorMode" class="form-group" >

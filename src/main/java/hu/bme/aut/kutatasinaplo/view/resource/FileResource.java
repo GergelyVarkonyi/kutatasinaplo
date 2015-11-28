@@ -13,9 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -84,13 +86,13 @@ public class FileResource {
 		}
 	}
 
-	@POST
+	@GET
 	@Path("/download/attachment")
 	@Produces(value = MediaType.APPLICATION_JSON)
-	public Response downloadAttachment(String id) {
+	public Response downloadAttachment(@QueryParam("id") int id) {
 		log.info("File upload");
 		try {
-			BlobFile file = fileService.loadById(Integer.parseInt(id));
+			BlobFile file = fileService.loadById(id);
 			return Response.ok(file.getData(), file.getType()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
