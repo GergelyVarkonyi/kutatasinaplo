@@ -2,6 +2,7 @@ var app = angular.module("knApp");
 
 app.controller('HeaderController', ['$scope','$http','$rootScope', function($scope, $http, $rootScope) {
 	$scope.user;
+	$scope.message;
 	
 	$scope.init = function() {
 		$http.get("/kutatasinaplo/rest/auth/current").
@@ -11,6 +12,9 @@ app.controller('HeaderController', ['$scope','$http','$rootScope', function($sco
 			}).
 			error(function(data) {
 			});
+		$rootScope.$watch('message', function(newValue, oldValue) {
+			$scope.message=newValue;
+		});
 	}
 	
 	$scope.logout = function() {

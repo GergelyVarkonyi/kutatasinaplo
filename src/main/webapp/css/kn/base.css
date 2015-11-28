@@ -141,3 +141,18 @@
 .alert.alert-danger{
 	margin-top: 5px;
 }
+
+#message-container {
+	height: 50px;
+	border-color: #854442;
+	border-width: 1px;
+	border-bottom-style: solid;
+}
+
+.header-message {
+	width: 700px;
+    padding: 0 20px;
+    margin: auto;
+    height: 40px;
+    line-height: 40px;
+}

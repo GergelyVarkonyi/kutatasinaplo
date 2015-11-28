@@ -36,3 +36,6 @@
 		</div>
 	</a>
 </div>
+<div id="message-container" ng-if="message.present">
+	<div class="alert alert-{{message.type}} header-message" role="alert">{{message.message}}</div>	
+</div>
