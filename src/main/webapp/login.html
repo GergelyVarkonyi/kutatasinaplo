@@ -36,10 +36,12 @@
 					<form>
 						<div class="form-group">
 							<label for="username">User name</label>
+							<p class="alert alert-danger" ng-if="!validationMap.username.valid">{{validationMap.username.msg}}</p>
 							<input id="username" type="text" class="form-control" placeholder="Name">
 						</div>
 						<div class="form-group">
 							<label for="pwd">Password</label>
+							<p class="alert alert-danger" ng-if="!validationMap.pwd.valid">{{validationMap.pwd.msg}}</p>
 							<input id="pwd" type="password" class="form-control" placeholder="Password">
 						</div>
 						<button type="submit" class="btn btn-primary btn-to-right" ng-click="login()">Login</button>

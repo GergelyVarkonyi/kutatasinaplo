@@ -133,6 +133,11 @@
 	color:red;
 }
 
+.page-title-icon {
+	float:right;
+	color:red;
+	font-size: 25px;
+}
 .alert.alert-danger{
 	margin-top: 5px;
 }

@@ -27,7 +27,7 @@
 				<h2 class="page-title">
 					Experiments
 				</h2>
-				<button class="btn btn-default page-title-button" type="submit" ng-click="slideDownNew()">
+				<button class="btn btn-default page-title-button" type="submit" ng-click="slideDownNew()" ng-if="hasPermissionTo('CREATE_EXPERIMENT')">
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 					New
 				</button>
@@ -70,7 +70,12 @@
 				            <td>{{exp.name}}</td>
 				            <td>{{exp.description}}</td>
 				            <td>{{exp.owner.name}}</td>
-				            <td><button type="submit" class="btn btn-danger" ng-click="delete(exp.id); $event.stopPropagation();">Delete</button></td>
+				            <td>
+				            	<button type="submit" class="btn btn-danger" ng-click="delete(exp.id); $event.stopPropagation();"
+				            												ng-if="hasPermissionTo('DELETE_EXPERIMENT', exp)">
+				            		Delete
+				            	</button>
+				            </td>
 				        </tr>
 			        </tbody>
 				</table>

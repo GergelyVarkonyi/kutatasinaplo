@@ -1,6 +1,6 @@
 var app = angular.module("knApp");
 
-app.controller('ExperimentsController', ['$scope', '$http', function($scope, $http) {
+app.controller('ExperimentsController', ['$scope', '$http','$rootScope', function($scope, $http, $rootScope) {
 	$scope.experiments = [];
 	
 	$scope.slideDownNew = function() {
@@ -9,6 +9,22 @@ app.controller('ExperimentsController', ['$scope', '$http', function($scope, $ht
 	
 	$scope.slideUpNew = function() {
 		$( "#new-experiment-form-container" ).slideUp("slow");
+	}
+	
+	$scope.hasPermissionTo = function(action, entity) {
+		var current = $rootScope.current;
+		if(current) {
+			if(action==='CREATE_EXPERIMENT') {
+				return current.role==='USER' || $scope.isAdmin();
+			} else if(action==='DELETE_EXPERIMENT') {
+				return $scope.isAdmin() || entity.owner.id == current.id;
+			}
+		}
+		return false;
+	}
+	
+	$scope.isAdmin = function() {
+		return $rootScope.current.role==='ADMIN';
 	}
 	
 	$scope.create = function() {
