@@ -1,6 +1,6 @@
 var app = angular.module("knApp");
 
-app.controller('ExperimentController', ['$scope', '$http', function($scope, $http) {
+app.controller('ExperimentController', ['$scope', '$http', '$rootScope', function($scope, $http,$rootScope) {
 	$scope.data = {};
 	$scope.users = [];
 	$scope.canParticipate = [];
@@ -9,7 +9,46 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 	$scope.addedFiles = [];
 	$scope.addedImages = [];
 	
+	$scope.validationMap = {
+			'name':{'valid': true, 'msg': ''},
+			'description':{'valid': true, 'msg': ''},
+			'urls':{'valid': true, 'msg': ''}};
+	
 	$scope.save = function() {
+		var validationError = false;
+		
+		if(!$scope.data.description) {
+			$scope.validationMap.description.valid=false;
+			$scope.validationMap.description.msg='Description is requeired.';
+			validationError = true;
+		} else {
+			$scope.validationMap.description.valid=true;
+		}
+		var i;
+		var urlLabelsAreOK = true;
+		for (i=0; i<$scope.data.urls.length; i++) {
+			if(!$scope.data.urls[i].key || !$scope.data.urls[i].value) {
+				$scope.validationMap.urls.valid=false;
+				$scope.validationMap.urls.msg='None of the labels or urls below can be empty.';
+				validationError = true;
+				urlLabelsAreOK = false;
+				break;
+			} else if(!$scope.isValidUrl($scope.data.urls[i].value)) {
+				$scope.validationMap.urls.valid=false;
+				$scope.validationMap.urls.msg='One of the urls is not valid.';
+				validationError = true;
+				urlLabelsAreOK = false;
+				break;			
+			}
+		}
+		if(urlLabelsAreOK) {
+			$scope.validationMap.urls.valid=true;
+		}
+		
+		if (validationError) {
+			return;
+		}
+		
 		$http.post('rest/experiment/save', $scope.data).then(
 				// Success
 				function (resp) {
@@ -22,8 +61,39 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 			);
 	}
 	
+	$scope.isValidUrl = function(url) {
+	    return url.match(/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/);
+	}
+	
 	$scope.edit = function() {
 		$scope.inEditorMode = true;
+	}
+	
+	$scope.hasPermissionTo = function(action, entity) {
+		var current = $rootScope.current;
+		if(current) {
+			if (current.role === 'ADMIN') {
+				return true;
+			}
+			
+			if(action==='EDIT_EXPERIMENT' || action==='SAVE_EXPERIMENT' || action==='UPLOAD' || action==='ADD_URL') {
+				if ($scope.data.owner && $scope.data.owner.id == current.id) {
+					return true;
+				} else if ($scope.data.participants) {
+					var i;
+					for (i=0; i<$scope.data.participants.length; i++) {
+						if ($scope.data.participants[i].id == current.id) {
+							return true;
+						}
+					}
+				}
+			} else if(action==='ADD_PARTICIPANT') {
+				if($scope.data.owner) {
+					return $scope.data.owner.id == current.id;
+				}
+			}
+		}
+		return false;
 	}
 	
 	$scope.setParticipants = function() {
@@ -128,6 +198,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 			// Success
 			function (resp) {
 				$scope.init();
+				$scope.addedFiles = [];
 			},
 			// Error
 			function (resp) {
@@ -141,6 +212,7 @@ app.controller('ExperimentController', ['$scope', '$http', function($scope, $htt
 			// Success
 			function (resp) {
 				$scope.init();
+				$scope.addedImages = [];
 			},
 			// Error
 			function (resp) {

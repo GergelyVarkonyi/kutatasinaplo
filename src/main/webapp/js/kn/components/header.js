@@ -1,12 +1,13 @@
 var app = angular.module("knApp");
 
-app.controller('HeaderController', ['$scope','$http', function($scope, $http) {
+app.controller('HeaderController', ['$scope','$http','$rootScope', function($scope, $http, $rootScope) {
 	$scope.user;
 	
 	$scope.init = function() {
 		$http.get("/kutatasinaplo/rest/auth/current").
 			success(function(resp) {
 				$scope.user = resp;
+				$rootScope.current = resp;
 			}).
 			error(function(data) {
 			});
@@ -16,6 +17,7 @@ app.controller('HeaderController', ['$scope','$http', function($scope, $http) {
 		$http.get("/kutatasinaplo/rest/auth/logout").
 			success(function(resp) {
 				delete $scope.user;
+				delete $rootScope.current;
 				window.location = window.location.origin + "/kutatasinaplo/experiments.html";
 			}).
 			error(function(data) {
