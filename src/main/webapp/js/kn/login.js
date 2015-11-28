@@ -37,6 +37,7 @@ app.controller('AuthController', [ '$scope', '$rootScope', '$http', function($sc
 		}).success(function(data) {
 			window.location = window.location.origin + "/kutatasinaplo/auth/index.html";
 		}).error(function(data) {
+			$rootScope.message = {'present' : true, 'message': "There was an error during the process, please try it again later.", 'type':'danger'};
 		});
 	}
 	

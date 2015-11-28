@@ -16,7 +16,7 @@ app.controller('HeaderController', ['$scope','$http','$rootScope','$timeout', fu
 			$scope.message=newValue;
 			$timeout(function(){
 				$rootScope.message.present = false;
-			}, 5000);
+			}, 10000);
 		});
 	}
 	
