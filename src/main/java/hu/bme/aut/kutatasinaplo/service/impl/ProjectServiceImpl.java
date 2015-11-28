@@ -23,6 +23,7 @@ public class ProjectServiceImpl extends AbstractEntityServiceImpl<Project> imple
 			em = beginTransaction();
 			em.persist(project);
 			commitTransaction(em);
+			projectVO.setId(project.getId());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

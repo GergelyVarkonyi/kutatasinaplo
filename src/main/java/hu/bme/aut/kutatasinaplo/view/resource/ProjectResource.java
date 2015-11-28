@@ -3,9 +3,11 @@ package hu.bme.aut.kutatasinaplo.view.resource;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,10 +38,10 @@ public class ProjectResource {
 	@POST
 	@Path("/create")
 	@Produces(value = MediaType.APPLICATION_JSON)
-	public Response create(ProjectVO projectVO) {
+	public ProjectVO create(ProjectVO projectVO) {
 		boolean success = projectService.create(projectVO);
 
-		return success ? Response.ok().build() : Response.status(Status.BAD_REQUEST).build();
+		return success ? projectVO : null;
 	}
 
 	@GET
@@ -59,6 +61,19 @@ public class ProjectResource {
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage());
 			return null;
+		}
+	}
+
+	@DELETE
+	@Path("/delete/{id}")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam(value = "id") String id) {
+		log.info("Load project: " + id);
+		boolean success = projectService.delete(Integer.valueOf(id));
+		if (success) {
+			return Response.ok().build();
+		} else {
+			return Response.status(Status.BAD_REQUEST).build();
 		}
 	}
 

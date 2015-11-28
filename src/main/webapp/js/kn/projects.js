@@ -22,7 +22,7 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 			).then(
 					// Success
 					function (resp) {
-						$scope.projects.push($scope.edited);
+						$scope.projects.push(resp.data);
 						$scope.edited = null;
 					},
 					// Error
@@ -37,6 +37,22 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 			$scope.ok = false;
 		}
 	}
+	
+	$scope.delete = function(item){
+		$http.delete('/kutatasinaplo/rest/project/delete/' + item.id)
+		.then(
+				// Success
+				function (resp) {
+					var itemIndex=$scope.projects.lastIndexOf(item);
+					$scope.projects.splice(itemIndex, 1);
+				},
+				// Error
+				function (resp) {
+					
+				}
+			);
+		
+	} 
 	
 	function init() {
 		$http.get('/kutatasinaplo/rest/project/list').then(
