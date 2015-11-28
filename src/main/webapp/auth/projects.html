@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html ng-app="knApp">
 <head>
-<link rel="stylesheet" type="text/css" href="/kutatasinaplo/css/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="/kutatasinaplo/css/bootstrap/css/bootstrap.css">
 
-<link rel="stylesheet" type="text/css" href="/kutatasinaplo/css/kn/header.css">
+<link rel="stylesheet" type="text/css"
+	href="/kutatasinaplo/css/kn/header.css">
 
 <script src="../js/jquery/jquery-2.1.4.min.js"></script>
 <script src="../js/angular/angular.min.js"></script>
@@ -11,12 +13,65 @@
 
 <script src="../js/kn/base.js"></script>
 <script src="../js/kn/components/header.js"></script>
+<script src="../js/kn/projects.js"></script>
+
 
 <title>Kutatasi naplo - index</title>
 </head>
 <body>
 	<div ng-controller="HeaderController">
 		<header></header>
+	</div>
+
+	<div id="page-container" ng-controller="ProjectsController">
+		<div class="page-content">
+			<div class="page-title-container">
+				<h2 class="page-title">Projects</h2>
+				<button class="btn btn-default page-title-button" type="submit"
+					ng-click="slideDownNew()">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					New
+				</button>
+			</div>
+			<div id="new-experiment-form-container"
+				class="accordion-form-container">
+				<form>
+					<div class="form-group">
+						<label for="new-experiment-name">Name</label> <input type="text"
+							class="form-control" id="new-experiment-name" placeholder="Name">
+					</div>
+					<div class="form-group">
+						<label for="new-experiment-description">Description</label>
+						<textarea class="form-control not-resizable"
+							id="new-experiment-description" rows="6"></textarea>
+					</div>
+					<button type="submit" class="btn btn-success" ng-click="create()">Create</button>
+					<button type="submit" class="btn btn-warning"
+						ng-click="slideUpNew()">Cancel</button>
+				</form>
+			</div>
+			<div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Name</th>
+							<th>Description</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="proj in projects" class="experiment-row">
+							<th scope="row">{{$index}}</th>
+							<td>{{proj.name}}</td>
+							<td>{{proj.description}}</td>
+							<!-- 							<td><button type="submit" class="btn btn-danger" -->
+							<!-- 									ng-click="delete(exp.id); $event.stopPropagation();">Delete</button></td> -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

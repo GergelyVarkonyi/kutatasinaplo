@@ -1,11 +1,5 @@
 package hu.bme.aut.kutatasinaplo.db;
 
-import hu.bme.aut.kutatasinaplo.model.Experiment;
-import hu.bme.aut.kutatasinaplo.model.ExperimentType;
-import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
-import hu.bme.aut.kutatasinaplo.model.Role;
-import hu.bme.aut.kutatasinaplo.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
@@ -14,6 +8,12 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+
+import hu.bme.aut.kutatasinaplo.model.Experiment;
+import hu.bme.aut.kutatasinaplo.model.ExperimentType;
+import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
 
 public class InitDB {
 	@Test
@@ -47,7 +47,7 @@ public class InitDB {
 						.keyOfInstance("index")
 						.value("http://www.index.hu")
 						.build()))
-						.build();
+				.build();
 
 		Experiment privateExp = Experiment.builder()
 				.name("Private test")
@@ -59,7 +59,7 @@ public class InitDB {
 						.keyOfInstance("index")
 						.value("http://www.index.hu")
 						.build()))
-						.build();
+				.build();
 
 		em.getTransaction().begin();
 		em.persist(admin);
