@@ -2,9 +2,13 @@ package hu.bme.aut.kutatasinaplo.service.impl;
 
 import hu.bme.aut.kutatasinaplo.model.BlobFile;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
+import hu.bme.aut.kutatasinaplo.model.User;
 import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
 import hu.bme.aut.kutatasinaplo.service.BlobFileService;
 import hu.bme.aut.kutatasinaplo.service.ExperimentService;
+import hu.bme.aut.kutatasinplo.security.SecurityUtils;
+import hu.bme.aut.kutatasinplo.security.SecurityUtils.Action;
 
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +19,8 @@ public class BlobFileServiceImpl extends AbstractEntityServiceImpl<BlobFile> imp
 
 	@Inject
 	private ExperimentService experimentService;
+	@Inject
+	private AuthService authService;
 
 	@Override
 	protected Class<BlobFile> getEntityClass() {
@@ -24,6 +30,11 @@ public class BlobFileServiceImpl extends AbstractEntityServiceImpl<BlobFile> imp
 	@Override
 	public boolean deleteAttachment(int experimentId, int id) {
 		Experiment experiment = experimentService.loadById(experimentId);
+		User currentUser = authService.getCurrentUser();
+		if (!SecurityUtils.hasPermission(Action.DELETE_FILE, currentUser, experiment)) {
+			return false;
+		}
+
 		List<BlobFile> attachments = experiment.getAttachments();
 		Iterator<BlobFile> iterator = attachments.iterator();
 		while (iterator.hasNext()) {
@@ -44,6 +55,11 @@ public class BlobFileServiceImpl extends AbstractEntityServiceImpl<BlobFile> imp
 	@Override
 	public boolean deleteImage(int experimentId, int id) {
 		Experiment experiment = experimentService.loadById(experimentId);
+		User currentUser = authService.getCurrentUser();
+		if (!SecurityUtils.hasPermission(Action.DELETE_FILE, currentUser, experiment)) {
+			return false;
+		}
+
 		List<BlobFile> images = experiment.getImages();
 		Iterator<BlobFile> iterator = images.iterator();
 		while (iterator.hasNext()) {

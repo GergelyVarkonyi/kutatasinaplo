@@ -72,6 +72,20 @@ public abstract class AbstractEntityServiceImpl<T extends AbstractEntity> implem
 		}
 	}
 
+	protected boolean delete(T entity) {
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			em.remove(entity);
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
+	}
+
 	@Override
 	public boolean save(int id) throws ValidateException {
 		EntityManager em = null;
