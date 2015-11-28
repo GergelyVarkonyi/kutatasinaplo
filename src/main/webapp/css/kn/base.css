@@ -132,3 +132,7 @@
 .trash-icon {
 	color:red;
 }
+
+.alert.alert-danger{
+	margin-top: 5px;
+}

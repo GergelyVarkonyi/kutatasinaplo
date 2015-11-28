@@ -1,6 +1,7 @@
 package hu.bme.aut.kutatasinaplo.view.resource;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,13 +55,9 @@ public class ProjectResource {
 		log.info("Load project: " + id);
 		try {
 			Project project = projectService.loadById(Integer.valueOf(id));
-			if (project != null) {
-				return mapper.map(project);
-			} else {
-				return null;
-			}
+			return mapper.map(project);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, e.getMessage());
 			return null;
 		}
 	}
