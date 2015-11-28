@@ -2,6 +2,7 @@ package hu.bme.aut.kutatasinaplo.service.impl;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.AbstractEntity;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
 import hu.bme.aut.kutatasinaplo.service.AbstractEntityService;
 
 import java.util.List;
@@ -72,11 +73,15 @@ public abstract class AbstractEntityServiceImpl<T extends AbstractEntity> implem
 	}
 
 	@Override
-	public boolean save(int id) {
+	public boolean save(int id) throws ValidateException {
 		EntityManager em = null;
 		try {
 			em = beginTransaction();
-			em.merge(loadById(id));
+
+			T entity = loadById(id);
+			validate(entity);
+
+			em.merge(entity);
 			commitTransaction(em);
 			return true;
 		} catch (Exception e) {
@@ -87,7 +92,9 @@ public abstract class AbstractEntityServiceImpl<T extends AbstractEntity> implem
 	}
 
 	@Override
-	public boolean save(T entity) {
+	public boolean save(T entity) throws ValidateException {
+		validate(entity);
+
 		EntityManager em = null;
 		try {
 			em = beginTransaction();
@@ -114,5 +121,9 @@ public abstract class AbstractEntityServiceImpl<T extends AbstractEntity> implem
 	protected void commitTransaction(EntityManager em) {
 		em.flush();
 		em.getTransaction().commit();
+	}
+
+	protected void validate(T entity) throws ValidateException {
+
 	}
 }

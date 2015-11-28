@@ -1,6 +1,6 @@
 var app = angular.module("knApp");
 
-app.controller('HeaderController', ['$scope','$http','$rootScope', function($scope, $http, $rootScope) {
+app.controller('HeaderController', ['$scope','$http','$rootScope','$timeout', function($scope, $http, $rootScope, $timeout) {
 	$scope.user;
 	$scope.message;
 	
@@ -14,6 +14,9 @@ app.controller('HeaderController', ['$scope','$http','$rootScope', function($sco
 			});
 		$rootScope.$watch('message', function(newValue, oldValue) {
 			$scope.message=newValue;
+			$timeout(function(){
+				$rootScope.message.present = false;
+			}, 5000);
 		});
 	}
 	

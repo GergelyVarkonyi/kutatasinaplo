@@ -2,6 +2,7 @@ package hu.bme.aut.kutatasinaplo.view.resource;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
 import hu.bme.aut.kutatasinaplo.service.UserService;
 import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 
@@ -45,6 +46,8 @@ public class UserResource {
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();
 			}
+		} catch (ValidateException e) {
+			return Response.status(Status.BAD_REQUEST).type("text/plain").entity(e.getMessage()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();

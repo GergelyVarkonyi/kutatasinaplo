@@ -2,6 +2,7 @@ package hu.bme.aut.kutatasinaplo.service.impl;
 
 import hu.bme.aut.kutatasinaplo.model.BlobFile;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
 import hu.bme.aut.kutatasinaplo.service.BlobFileService;
 import hu.bme.aut.kutatasinaplo.service.ExperimentService;
 
@@ -32,7 +33,12 @@ public class BlobFileServiceImpl extends AbstractEntityServiceImpl<BlobFile> imp
 			}
 		}
 
-		return experimentService.save(experiment);
+		try {
+			return experimentService.save(experiment);
+		} catch (ValidateException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -47,7 +53,12 @@ public class BlobFileServiceImpl extends AbstractEntityServiceImpl<BlobFile> imp
 			}
 		}
 
-		return experimentService.save(experiment);
+		try {
+			return experimentService.save(experiment);
+		} catch (ValidateException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

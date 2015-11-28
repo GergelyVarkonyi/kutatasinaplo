@@ -2,11 +2,17 @@ package hu.bme.aut.kutatasinaplo.view.resource;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
+import hu.bme.aut.kutatasinaplo.model.ExperimentType;
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
 import hu.bme.aut.kutatasinaplo.service.ExperimentService;
 import hu.bme.aut.kutatasinaplo.view.model.AddListToEntityVO;
 import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
 import hu.bme.aut.kutatasinaplo.view.model.IdVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -28,11 +34,13 @@ import com.google.inject.Inject;
 public class ExperimentResource {
 
 	private ExperimentService experimentService;
+	private AuthService authService;
 	private DataViewMapper mapper;
 
 	@Inject
-	public ExperimentResource(ExperimentService experimentService, DataViewMapper mapper) {
+	public ExperimentResource(ExperimentService experimentService, AuthService authService, DataViewMapper mapper) {
 		this.experimentService = experimentService;
+		this.authService = authService;
 		this.mapper = mapper;
 	}
 
@@ -47,6 +55,8 @@ public class ExperimentResource {
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();
 			}
+		} catch (ValidateException e) {
+			return Response.status(Status.BAD_REQUEST).type("text/plain").entity(e.getMessage()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
@@ -74,13 +84,47 @@ public class ExperimentResource {
 	@GET
 	@Path("/list/experiment")
 	public List<ExperimentVO> listExperiments() {
-		return Lists.transform(experimentService.loadAll(), new Function<Experiment, ExperimentVO>() {
+		User currentUser = authService.getCurrentUser();
 
-			@Override
-			public ExperimentVO apply(Experiment input) {
-				return mapper.map(input);
+		ArrayList<ExperimentVO> views = Lists.newArrayList();
+		for (Experiment experiment : experimentService.loadAll()) {
+			// If its public than add to list
+			if (experiment.getType() == ExperimentType.PUBLIC) {
+				views.add(mapper.map(experiment));
+				continue;
+			} else {
+				if (currentUser != null) {
+					// If current use is an admin
+					if (currentUser.getRole() == Role.ADMIN) {
+						views.add(mapper.map(experiment));
+						continue;
+					}
+
+					int id = currentUser.getId();
+					// If the owner is the logged in user
+					if (id == experiment.getOwner().getId()) {
+						views.add(mapper.map(experiment));
+						continue;
+					} else {
+						// If the logged in user participate in the experiment
+						List<User> participants = experiment.getParticipants();
+						if (participants != null) {
+							List<Integer> participantIds = Lists.transform(participants, new Function<User, Integer>() {
+								@Override
+								public Integer apply(User input) {
+									return input.getId();
+								}
+							});
+							if (participantIds.contains(id)) {
+								views.add(mapper.map(experiment));
+								continue;
+							}
+						}
+					}
+				}
 			}
-		});
+		}
+		return views;
 	}
 
 	@POST
@@ -129,6 +173,8 @@ public class ExperimentResource {
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();
 			}
+		} catch (ValidateException e) {
+			return Response.status(Status.BAD_REQUEST).type("text/plain").entity(e.getMessage()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
