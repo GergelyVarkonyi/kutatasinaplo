@@ -11,4 +11,6 @@ public interface ProjectService extends AbstractEntityService<Project> {
 
 	boolean setParticipants(int experimentId, List<Integer> participantsIds);
 
+	void save(ProjectVO projectVO);
+
 }

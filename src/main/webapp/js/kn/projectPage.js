@@ -13,51 +13,48 @@ app
               $scope.data = {};
 
               $scope.edit = function() {
-
-              }
-
-              $scope.edit = function() {
                 $scope.inEditorMode = true;
               }
 
-              $scope.slideDownAdder = function() {
+              $scope.slideDownParticipantsAdder = function() {
                 $("#add-participants-form-container").slideDown("slow");
               }
 
-              $scope.slideUpAdder = function() {
+              $scope.slideUpParticipantsAdder = function() {
                 $("#add-participants-form-container").slideUp("slow");
               }
-              
+
               $scope.setParticipants = function() {
                 var participantsIds = [];
-                $("#multiselect_to option").each(function()
-                {
+                $("#multiselect_to option").each(function() {
                   participantsIds.push($(this).val());
                 });
-                
-                $http.post('rest/project/set/participants', 
-                    { 'entityId' : $scope.id,
-                      'list' : participantsIds
-                    }).then(
-                    // Success
-                    function (resp) {
-                      init();
-                    },
-                    // Error
-                    function (resp) {
-                      
-                    }
-                  );
+
+                $http.post('rest/project/set/participants', {
+                  'entityId' : $scope.id,
+                  'list' : participantsIds
+                }).then(
+                // Success
+                function(resp) {
+                  init();
+                },
+                // Error
+                function(resp) {
+
+                });
               }
 
               var init = function() {
                 $scope.id = $.url(window.location).param('id');
                 $http
-                    .get('rest/project/' + $scope.id )
+                    .get('rest/project/' + $scope.id)
                     .then(
                         // Success
                         function(resp) {
                           $scope.data = resp.data;
+                          if ($scope.data.experiments && $scope.data.experiments.constructor !== Array) {
+                            $scope.data.experiments = [$scope.data.experiments];
+                          }
                           // Participants
                           if ($scope.data.participants) {
                             var participantsData = $scope.data.participants;
@@ -68,36 +65,42 @@ app
                           } else {
                             $scope.data.participants = [];
                           }
-                          // Urls
-                          if ($scope.data.urls) {
-                            var urlsData = $scope.data.urls;
-                            if (urlsData.constructor != Array) {
-                              $scope.data.urls = [];
-                              $scope.data.urls[0] = urlsData;
-                            }
-                          } else {
-                            $scope.data.urls = [];
-                          }
-                          // Participants
-                          if ($scope.data.attachments) {
-                            var attachmentsData = $scope.data.attachments;
-                            if (attachmentsData.constructor != Array) {
-                              $scope.data.attachments = [];
-                              $scope.data.attachments[0] = attachmentsData;
-                            }
-                          } else {
-                            $scope.data.attachments = [];
-                          }
-                          // Images
-                          if ($scope.data.images) {
-                            var imagesData = $scope.data.images;
-                            if (imagesData.constructor != Array) {
-                              $scope.data.images = [];
-                              $scope.data.images[0] = imagesData;
-                            }
-                          } else {
-                            $scope.data.images = [];
-                          }
+
+                          $http
+                              .get('rest/experiment/list/experiment')
+                              .then(
+                                  // Success
+                                  function(resp) {
+                                    if (resp.data) {
+                                      var experimentsData = resp.data.experiment;
+                                      if (experimentsData.constructor == Array) {
+                                        $scope.allExperiments = resp.data.experiment;
+                                      } else {
+                                        $scope.allExperiments[0] = experimentsData;
+                                      }
+                                      $scope.allExperimentsById = [];
+                                      for (i = 0; i < $scope.allExperiments.length; i++) {
+                                        var exp = $scope.allExperiments[i];
+                                        $scope.allExperimentsById[exp.id] = exp;
+                                      }
+
+                                      $scope.possibleExperiments = jQuery
+                                          .grep(
+                                              $scope.allExperiments,
+                                              function(value) {
+                                                var experiments = $scope.data.experiments;
+                                                var index;
+                                                if (experiments) {
+                                                  for (index = 0; index < experiments.length; ++index) {
+                                                    if (experiments[index].id == value.id) {
+                                                      return false;
+                                                    }
+                                                  }
+                                                }
+                                                return true;
+                                              });
+                                    }
+                                  });
 
                           $http
                               .get('rest/user/list/user')
@@ -116,7 +119,7 @@ app
                                             function(value) {
                                               var participants = $scope.data.participants;
                                               var index;
-                                              if (participants){
+                                              if (participants) {
                                                 for (index = 0; index < participants.length; ++index) {
                                                   if (participants[index].id == value.id) {
                                                     return false;
@@ -137,7 +140,36 @@ app
 
                         });
 
-              } 
+              }
+
+              $scope.save = function() {
+                var experimentIds = [];
+                $("#multiselect2_to option").each(function() {
+                  experimentIds.push($(this).val());
+                });
+
+                var experimentsInProject = [];
+
+                for (i = 0; i < experimentIds.length; i++) {
+                  var anID = experimentIds[i];
+                  var experiment = $scope.allExperimentsById[anID];
+                  experimentsInProject.push(experiment);
+                }
+
+                $scope.data.experiments = experimentsInProject;
+
+                $http.put('rest/project/', $scope.data).then(
+                // Success
+                function(resp) {
+                  init();
+                },
+                // Error
+                function(resp) {
+
+                });
+              }
+
               init();
               $('#multiselect').multiselect();
+              $('#multiselect2').multiselect();
             } ]);

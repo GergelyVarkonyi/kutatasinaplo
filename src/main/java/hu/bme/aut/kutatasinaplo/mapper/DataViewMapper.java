@@ -1,5 +1,12 @@
 package hu.bme.aut.kutatasinaplo.mapper;
 
+import java.util.List;
+
+import javax.xml.bind.DatatypeConverter;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 import hu.bme.aut.kutatasinaplo.model.AbstractEntity;
 import hu.bme.aut.kutatasinaplo.model.BlobFile;
 import hu.bme.aut.kutatasinaplo.model.Experiment;
@@ -15,13 +22,6 @@ import hu.bme.aut.kutatasinaplo.view.model.KeyValuePairVO;
 import hu.bme.aut.kutatasinaplo.view.model.ProjectVO;
 import hu.bme.aut.kutatasinaplo.view.model.UrlVO;
 import hu.bme.aut.kutatasinaplo.view.model.UserVO;
-
-import java.util.List;
-
-import javax.xml.bind.DatatypeConverter;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 
 public class DataViewMapper {
 
@@ -264,13 +264,7 @@ public class DataViewMapper {
 
 			List<Experiment> experiments = model.getExperiments();
 			if (experiments != null) {
-				view.setExperiments(Lists.transform(experiments, new Function<Experiment, ExperimentVO>() {
-
-					@Override
-					public ExperimentVO apply(Experiment input) {
-						return map(input);
-					}
-				}));
+				view.setExperiments(Lists.newArrayList(Lists.transform(experiments, this::map)));
 			}
 			List<User> participants = model.getParticipants();
 			if (participants != null) {

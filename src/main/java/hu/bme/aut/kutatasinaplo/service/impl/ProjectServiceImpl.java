@@ -71,4 +71,21 @@ public class ProjectServiceImpl extends AbstractEntityServiceImpl<Project> imple
 		}
 	}
 
+	@Override
+	public void save(ProjectVO projectVO) {
+		EntityManager em = null;
+		try {
+			Project project = mapper.map(projectVO);
+
+			em = beginTransaction();
+			em.merge(project);
+			commitTransaction(em);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (em != null) {
+				em.getTransaction().rollback();
+			}
+		}
+	}
+
 }
