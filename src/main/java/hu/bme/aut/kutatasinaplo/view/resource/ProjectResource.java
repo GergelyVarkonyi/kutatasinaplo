@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.Project;
 import hu.bme.aut.kutatasinaplo.service.ProjectService;
+import hu.bme.aut.kutatasinaplo.view.model.AddListToEntityVO;
 import hu.bme.aut.kutatasinaplo.view.model.ProjectVO;
 import lombok.extern.java.Log;
 
@@ -50,14 +51,15 @@ public class ProjectResource {
 		return Lists.transform(projectService.loadAll(), mapper::map);
 	}
 
-	@POST
-	@Path("/load")
+	@GET
+	@Path("/{id}")
 	@Produces(value = MediaType.APPLICATION_JSON)
-	public ProjectVO load(String id) {
+	public ProjectVO load(@PathParam(value = "id") String id) {
 		log.info("Load project: " + id);
 		try {
 			Project project = projectService.loadById(Integer.valueOf(id));
-			return mapper.map(project);
+			ProjectVO projectVO = mapper.map(project);
+			return projectVO;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage());
 			return null;
@@ -68,12 +70,28 @@ public class ProjectResource {
 	@Path("/delete/{id}")
 	@Produces(value = MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam(value = "id") String id) {
-		log.info("Load project: " + id);
 		boolean success = projectService.delete(Integer.valueOf(id));
 		if (success) {
 			return Response.ok().build();
 		} else {
 			return Response.status(Status.BAD_REQUEST).build();
+		}
+	}
+
+	@POST
+	@Path("/set/participants")
+	@Produces(value = MediaType.APPLICATION_JSON)
+	public Response setParticipants(AddListToEntityVO view) {
+		log.info("Add participants " + view.getIds());
+		try {
+			if (projectService.setParticipants(view.getEntityId(), view.getIds())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
 		}
 	}
 
