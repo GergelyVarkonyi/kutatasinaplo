@@ -14,6 +14,12 @@ app
 
               $scope.edit = function() {
                 $scope.inEditorMode = true;
+                $scope.dataSnapshot = angular.copy($scope.data);
+              }
+              
+              $scope.cancel = function(){
+                $scope.data = $scope.dataSnapshot;
+                $scope.inEditorMode = false;
               }
 
               $scope.slideDownParticipantsAdder = function() {
@@ -22,6 +28,10 @@ app
 
               $scope.slideUpParticipantsAdder = function() {
                 $("#add-participants-form-container").slideUp("slow");
+              }
+              
+              $scope.loadExperiment = function(id) {
+                window.location = window.location.origin + "/kutatasinaplo/experimentPage.html?id="+id; 
               }
 
               $scope.setParticipants = function() {
@@ -45,6 +55,7 @@ app
               }
 
               var init = function() {
+                $scope.inEditorMode = false;
                 $scope.id = $.url(window.location).param('id');
                 $http
                     .get('rest/project/' + $scope.id)
@@ -161,6 +172,7 @@ app
                 $http.put('rest/project/', $scope.data).then(
                 // Success
                 function(resp) {
+                  $scope.slideUpParticipantsAdder()
                   init();
                 },
                 // Error
