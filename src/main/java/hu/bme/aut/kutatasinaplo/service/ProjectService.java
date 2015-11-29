@@ -13,4 +13,7 @@ public interface ProjectService extends AbstractEntityService<Project> {
 
 	void save(ProjectVO projectVO);
 
+	boolean shouldDisplayAdminWarning(ProjectVO projectVO);
+
+	boolean addEveryParticipantsToExperiments(Integer projectId);
 }

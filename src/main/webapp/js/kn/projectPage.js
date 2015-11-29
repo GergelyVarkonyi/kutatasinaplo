@@ -22,6 +22,21 @@ app
                 $scope.inEditorMode = false;
               }
 
+              $scope.addEveryone = function(){
+                $http.post('rest/project/add-everyone', 
+                    $scope.id
+                    ).then(
+                // Success
+                function(resp) {
+                  $rootScope.message = {'present' : true, 'message': 'Succesfully added everyone.', 'type':'success'};
+                  $scope.data.adminAccessRightWarning = false;
+                },
+                // Error
+                function(resp) {
+
+                });
+              }
+              
               $scope.slideDownParticipantsAdder = function() {
                 $("#add-participants-form-container").slideDown("slow");
               }

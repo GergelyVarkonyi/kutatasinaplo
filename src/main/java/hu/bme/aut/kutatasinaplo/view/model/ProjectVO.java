@@ -31,5 +31,6 @@ public class ProjectVO {
 	private List<ExperimentVO> experiments;
 	@XmlElement(name = "experimentWithoutRight")
 	private boolean experimentWithoutRight;
-
+	@XmlElement(name = "adminAccessRightWarning")
+	private boolean adminAccessRightWarning;
 }

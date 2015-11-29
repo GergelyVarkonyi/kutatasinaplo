@@ -78,6 +78,9 @@ public class ProjectResource {
 				if (experiments.size() != accessibleExperiments.size()) {
 					projectVO.setExperimentWithoutRight(true);
 				}
+			} else {
+				boolean shouldDisplayAdminWarning = projectService.shouldDisplayAdminWarning(projectVO);
+				projectVO.setAdminAccessRightWarning(shouldDisplayAdminWarning);
 			}
 			return projectVO;
 		} catch (Exception e) {
@@ -116,6 +119,21 @@ public class ProjectResource {
 		log.info("Add participants " + view.getIds());
 		try {
 			if (projectService.setParticipants(view.getEntityId(), view.getIds())) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	@POST
+	@Path(value = "/add-everyone")
+	public Response addEveryParticipantsToExperiments(String id) {
+		try {
+			if (projectService.addEveryParticipantsToExperiments(Integer.valueOf(id))) {
 				return Response.ok().build();
 			} else {
 				return Response.status(Status.BAD_REQUEST).build();
