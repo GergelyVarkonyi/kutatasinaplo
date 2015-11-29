@@ -1,10 +1,13 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
+import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
 import hu.bme.aut.kutatasinaplo.model.Role;
 import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
 import hu.bme.aut.kutatasinaplo.service.UserService;
 import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -16,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.shiro.crypto.hash.Sha512Hash;
+import org.hibernate.Hibernate;
 
 import com.google.common.base.Strings;
 
@@ -33,14 +37,16 @@ public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements 
 
 		TypedQuery<User> query = em.createQuery(criteriaQuery);
 		try {
-			return query.getSingleResult();
+			User user = query.getSingleResult();
+			Hibernate.initialize(user.getKnowledge());
+			return user;
 		} catch (NoResultException e) {
 			return null;
 		}
 	}
 
 	@Override
-	public boolean createUser(UserVO view) {
+	public boolean createUser(UserVO view) throws ValidateException {
 		view.setRole(Role.USER);
 		User user = mapper.map(view);
 
@@ -48,6 +54,9 @@ public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements 
 		Sha512Hash sha512Hash = new Sha512Hash(user.getPassword(), salt, 10);
 		user.setSalt(salt);
 		user.setPassword(sha512Hash.toBase64());
+
+		validate(user);
+
 		EntityManager em = null;
 		try {
 			em = beginTransaction();
@@ -58,6 +67,35 @@ public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements 
 			e.printStackTrace();
 			em.getTransaction().rollback();
 			return false;
+		}
+	}
+
+	@Override
+	protected void validate(User user) throws ValidateException {
+		String name = user.getName();
+		if (Strings.isNullOrEmpty(name)) {
+			throw new ValidateException("Name can not be empty.");
+		}
+		if (loadByName(name) != null) {
+			throw new ValidateException("There is already a user with the same name.");
+		}
+		String email = user.getEmail();
+		if (Strings.isNullOrEmpty(email)) {
+			throw new ValidateException("Email can not be empty.");
+		}
+		String password = user.getPassword();
+		if (Strings.isNullOrEmpty(password)) {
+			throw new ValidateException("Password can not be empty.");
+		}
+
+		List<KeyValuePair> knowledge = user.getKnowledge();
+		if (knowledge != null) {
+			for (KeyValuePair pair : knowledge) {
+				String key = pair.getKeyOfInstance();
+				if (Strings.isNullOrEmpty(key)) {
+					throw new ValidateException("Topic can not be empty.");
+				}
+			}
 		}
 	}
 

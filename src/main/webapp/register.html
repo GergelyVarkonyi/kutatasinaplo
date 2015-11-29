@@ -50,7 +50,14 @@
 						
 						<label for="knowledge">Knowledge</label>
 						<p class="alert alert-danger" ng-if="!validationMap.knowledge.valid">{{validationMap.knowledge.msg}}</p>
-						<key-value-pair-component id="knowledge" values="user.knowledge" key-label="'Topic'" value-label="'Description'" button-label="'Add'" add-callback="addNewKnowledge()">
+						<key-value-pair-component 
+							id="knowledge" 
+							values="user.knowledge" 
+							key-label="'Topic'" 
+							value-label="'Description'" 
+							button-label="'Add'" 
+							add-callback="addNewKnowledge()"
+							delete-callback="removeKnowledge">
 						</key-value-pair-component>
 						
 						<button type="submit" class="btn btn-primary btn-to-right" ng-click="save()">Register</button>

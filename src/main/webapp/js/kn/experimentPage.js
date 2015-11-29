@@ -122,15 +122,8 @@ app.controller('ExperimentController', ['$scope', '$http', '$rootScope', functio
 		$scope.data.urls.push({'key':'', 'value':''})
 	}
 	
-	$scope.removeUrl = function(pair) {
-	   var i;
-	   var indexOfElement;
-	   for (i = 0; i < $scope.data.urls.length; ++i) {
-			if($scope.data.urls[i].id == pair.id) {
-				indexOfElement = i;
-			}
-	   }
-	   $scope.data.urls.splice(indexOfElement,1);
+	$scope.removeUrl = function(index) {
+	   $scope.data.urls.splice(index,1);
 	}
 	
 	$scope.attachmentChanged = function(element) {

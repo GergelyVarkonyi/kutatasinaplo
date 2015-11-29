@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Builder;
+
+import com.google.common.collect.Sets;
 
 @Entity
 @Table
@@ -43,7 +46,7 @@ public class User implements AbstractEntity {
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<KeyValuePair> knowledge;
 
 	public void setKnowledge(List<KeyValuePair> knowledge) {
@@ -52,8 +55,7 @@ public class User implements AbstractEntity {
 	}
 
 	public Set<String> getRoles() {
-		// TODO Auto-generated method stub
-		return null;
+		return Sets.newHashSet(role.name());
 	}
 
 }
