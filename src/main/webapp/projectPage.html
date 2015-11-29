@@ -46,15 +46,13 @@
 					Edit
 				</button>
 				<button class="btn btn-success page-title-button" type="submit"
-					ng-click="save()" ng-show="isAdmin && inEditorMode">
-					Save
-				</button>
+					ng-click="save()" ng-show="isAdmin && inEditorMode">Save</button>
 				<button class="btn btn-danger page-title-button" type="submit"
 					ng-click="cancel()" ng-show="isAdmin && inEditorMode">
-					Cancel
-				</button>
+					Cancel</button>
 				<button class="btn btn-default page-title-button" type="submit"
-					ng-click="slideDownParticipantsAdder()" ng-show="isAdmin && !inEditorMode">
+					ng-click="slideDownParticipantsAdder()"
+					ng-show="isAdmin && !inEditorMode">
 					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					Add participants
 				</button>
@@ -104,8 +102,6 @@
 				<h4>Description</h4>
 				<span ng-if="!inEditorMode"> {{data.description}} </span>
 				<div ng-if="inEditorMode" class="form-group">
-					<p class="alert alert-danger"
-						ng-if="!validationMap.description.valid">{{validationMap.description.msg}}</p>
 					<textarea class="not-resizable form-control" rows="6" cols="100"
 						ng-model="data.description">{{data.description}}</textarea>
 				</div>
@@ -119,11 +115,12 @@
 
 				<hr />
 
-				<div>
+				<div ng-hide="inEditorMode">
 					<h4>Experiments</h4>
+					<div class="alert alert-danger" role="alert" ng-show="data.experimentWithoutRight == 'true'">Warning! You do not have access right for certain experiments in this project.</div>
+					
 					<div ng-hide="data.experiments && data.experiments.length > 0">
-						There is no experiment in this project yet.
-					</div>
+						There is no experiment in this project yet.</div>
 					<div ng-show="data.experiments && data.experiments.length > 0">
 						<table class="table">
 							<thead>
@@ -136,8 +133,8 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="exp in data.experiments" ng-click="loadExperiment(exp.id)"
-									class="experiment-row">
+								<tr ng-repeat="exp in data.experiments"
+									ng-click="loadExperiment(exp.id)" class="experiment-row">
 									<th scope="row">{{$index}}</th>
 									<td>{{exp.name}}</td>
 									<td>{{exp.description}}</td>
@@ -152,45 +149,45 @@
 				<hr />
 			</div>
 
+			<div id="add-experiments-form-container" ng-show="inEditorMode">
+				<h4>Experiments</h4>
+				<form>
+					<div class="row">
+						<div class="col-xs-5">
+							<select name="from" id="multiselect2" class="form-control"
+								size="8" multiple="multiple">
+								<option value="{{e.id}}" ng-repeat="e in possibleExperiments">{{e.name}}</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<button type="button" id="multiselect2_rightAll"
+								class="btn btn-block btn-default">
+								<i class="glyphicon glyphicon-forward"></i>
+							</button>
+							<button type="button" id="multiselect2_rightSelected"
+								class="btn btn-block  btn-primary">
+								<i class="glyphicon glyphicon-chevron-right"></i>
+							</button>
+							<button type="button" id="multiselect2_leftSelected"
+								class="btn btn-block  btn-primary">
+								<i class="glyphicon glyphicon-chevron-left"></i>
+							</button>
+							<button type="button" id="multiselect2_leftAll"
+								class="btn btn-block  btn-default">
+								<i class="glyphicon glyphicon-backward"></i>
+							</button>
+						</div>
+						<div class="col-xs-5">
+							<select name="to" id="multiselect2_to" class="form-control"
+								size="8" multiple="multiple">
+								<option value="{{ex.id}}" ng-repeat="ex in data.experiments">{{ex.name}}</option>
+							</select>
+						</div>
+					</div>
+				</form>
 
-		</div>
+			</div>
 
-		<div id="add-experiments-form-container" ng-show="inEditorMode">
-			<h4>Experiments</h4>
-			<form>
-				<div class="row">
-					<div class="col-xs-5">
-						<select name="from" id="multiselect2" class="form-control"
-							size="8" multiple="multiple">
-							<option value="{{e.id}}" ng-repeat="e in possibleExperiments">{{e.name}}</option>
-						</select>
-					</div>
-					<div class="col-xs-2">
-						<button type="button" id="multiselect2_rightAll"
-							class="btn btn-block btn-default">
-							<i class="glyphicon glyphicon-forward"></i>
-						</button>
-						<button type="button" id="multiselect2_rightSelected"
-							class="btn btn-block  btn-primary">
-							<i class="glyphicon glyphicon-chevron-right"></i>
-						</button>
-						<button type="button" id="multiselect2_leftSelected"
-							class="btn btn-block  btn-primary">
-							<i class="glyphicon glyphicon-chevron-left"></i>
-						</button>
-						<button type="button" id="multiselect2_leftAll"
-							class="btn btn-block  btn-default">
-							<i class="glyphicon glyphicon-backward"></i>
-						</button>
-					</div>
-					<div class="col-xs-5">
-						<select name="to" id="multiselect2_to" class="form-control"
-							size="8" multiple="multiple">
-							<option value="{{ex.id}}" ng-repeat="ex in data.experiments">{{ex.name}}</option>
-						</select>
-					</div>
-				</div>
-			</form>
 		</div>
 
 	</div>

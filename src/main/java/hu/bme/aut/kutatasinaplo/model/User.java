@@ -16,13 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.common.collect.Sets;
+
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Builder;
-
-import com.google.common.collect.Sets;
 
 @Entity
 @Table
@@ -31,6 +32,7 @@ import com.google.common.collect.Sets;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = { "id", "email" })
 public class User implements AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

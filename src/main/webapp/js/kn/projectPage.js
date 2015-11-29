@@ -46,6 +46,7 @@ app
                 }).then(
                 // Success
                 function(resp) {
+                  $scope.slideUpParticipantsAdder()
                   init();
                 },
                 // Error
@@ -172,8 +173,8 @@ app
                 $http.put('rest/project/', $scope.data).then(
                 // Success
                 function(resp) {
-                  $scope.slideUpParticipantsAdder()
                   init();
+                  $scope.inEditorMode = false;
                 },
                 // Error
                 function(resp) {

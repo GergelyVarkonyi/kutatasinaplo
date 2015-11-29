@@ -15,6 +15,10 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 		$( "#new-experiment-form-container" ).slideUp("slow");
 	}
 	
+	$scope.openProjectPage = function(id){
+	   window.location = window.location.origin + "/kutatasinaplo/projectPage.html?id="+id; 
+	}
+	
 	$scope.create = function(form) {
 		if (form.$valid){
 			$http.post('/kutatasinaplo/rest/project/create',

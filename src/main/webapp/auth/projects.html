@@ -8,6 +8,8 @@
 	href="/kutatasinaplo/css/kn/header.css">
 <link rel="stylesheet" type="text/css"
 	href="/kutatasinaplo/css/kn/base.css">
+<link rel="stylesheet" type="text/css" href="/kutatasinaplo/css/kn/experiments.css">
+	
 
 <script src="../js/jquery/jquery-2.1.4.min.js"></script>
 <script src="../js/angular/angular.min.js"></script>
@@ -76,8 +78,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="proj in projects" class="experiment-row">
-							<th scope="row">{{$index}}</th>
+						<tr ng-repeat="proj in projects" class="experiment-row" ng-click="openProjectPage(proj.id)">
+							<th scope="row">{{$index + 1}}</th>
 							<td>{{proj.name}}</td>
 							<td>{{proj.description}}</td>
 							<td><button type="submit" class="btn btn-danger"

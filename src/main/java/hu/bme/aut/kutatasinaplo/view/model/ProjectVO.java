@@ -29,4 +29,7 @@ public class ProjectVO {
 	protected List<UserVO> participants;
 	@XmlElement(name = "experiments")
 	private List<ExperimentVO> experiments;
+	@XmlElement(name = "experimentWithoutRight")
+	private boolean experimentWithoutRight;
+
 }

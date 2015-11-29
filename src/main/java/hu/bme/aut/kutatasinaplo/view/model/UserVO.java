@@ -1,7 +1,5 @@
 package hu.bme.aut.kutatasinaplo.view.model;
 
-import hu.bme.aut.kutatasinaplo.model.Role;
-
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,7 +7,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import hu.bme.aut.kutatasinaplo.model.Role;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = { "id", "name" })
 public class UserVO {
 	@XmlElement(name = "id")
 	protected int id;

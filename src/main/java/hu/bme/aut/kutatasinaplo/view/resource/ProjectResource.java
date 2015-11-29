@@ -14,14 +14,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
 import hu.bme.aut.kutatasinaplo.model.Project;
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
 import hu.bme.aut.kutatasinaplo.service.ProjectService;
 import hu.bme.aut.kutatasinaplo.view.model.AddListToEntityVO;
+import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
 import hu.bme.aut.kutatasinaplo.view.model.ProjectVO;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 import lombok.extern.java.Log;
 
 @Path("/project")
@@ -30,11 +36,13 @@ public class ProjectResource {
 
 	private ProjectService projectService;
 	private DataViewMapper mapper;
+	private AuthService authService;
 
 	@Inject
-	public ProjectResource(ProjectService projectService, DataViewMapper mapper) {
+	public ProjectResource(ProjectService projectService, DataViewMapper mapper, AuthService authService) {
 		this.projectService = projectService;
 		this.mapper = mapper;
+		this.authService = authService;
 	}
 
 	@POST
@@ -58,8 +66,19 @@ public class ProjectResource {
 	public ProjectVO load(@PathParam(value = "id") String id) {
 		log.info("Load project: " + id);
 		try {
+			User currentUser = authService.getCurrentUser();
+			UserVO currentUserVO = mapper.map(currentUser);
 			Project project = projectService.loadById(Integer.valueOf(id));
 			ProjectVO projectVO = mapper.map(project);
+			if (currentUser.getRole() != Role.ADMIN) {
+				List<ExperimentVO> experiments = projectVO.getExperiments();
+				List<ExperimentVO> accessibleExperiments = Lists
+						.newArrayList(Collections2.filter(experiments, exp -> hasReaderRight(exp, currentUserVO)));
+				projectVO.setExperiments(accessibleExperiments);
+				if (experiments.size() != accessibleExperiments.size()) {
+					projectVO.setExperimentWithoutRight(true);
+				}
+			}
 			return projectVO;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage());
@@ -67,9 +86,20 @@ public class ProjectResource {
 		}
 	}
 
+	private boolean hasReaderRight(ExperimentVO experiment, UserVO currentUser) {
+		if (experiment.getOwner().equals(currentUser)) {
+			return true;
+		}
+		if (experiment.getParticipants().contains(currentUser)) {
+			return true;
+		}
+		return false;
+	}
+
 	@DELETE
 	@Path("/delete/{id}")
 	@Produces(value = MediaType.APPLICATION_JSON)
+
 	public Response delete(@PathParam(value = "id") String id) {
 		boolean success = projectService.delete(Integer.valueOf(id));
 		if (success) {
