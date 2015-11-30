@@ -1,17 +1,5 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
-import hu.bme.aut.kutatasinaplo.model.BlobFile;
-import hu.bme.aut.kutatasinaplo.model.Experiment;
-import hu.bme.aut.kutatasinaplo.model.User;
-import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
-import hu.bme.aut.kutatasinaplo.service.AuthService;
-import hu.bme.aut.kutatasinaplo.service.ExperimentService;
-import hu.bme.aut.kutatasinaplo.service.UserService;
-import hu.bme.aut.kutatasinaplo.view.model.BlobFileVO;
-import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
-import hu.bme.aut.kutatasinplo.security.SecurityUtils;
-import hu.bme.aut.kutatasinplo.security.SecurityUtils.Action;
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -22,6 +10,19 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
+import hu.bme.aut.kutatasinaplo.model.BlobFile;
+import hu.bme.aut.kutatasinaplo.model.Experiment;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
+import hu.bme.aut.kutatasinaplo.service.ExperimentService;
+import hu.bme.aut.kutatasinaplo.service.UserService;
+import hu.bme.aut.kutatasinaplo.view.model.BlobFileVO;
+import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
+import hu.bme.aut.kutatasinplo.security.SecurityUtils;
+import hu.bme.aut.kutatasinplo.security.SecurityUtils.Action;
 
 public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment> implements ExperimentService {
 
@@ -228,5 +229,16 @@ public class ExperimentServiceImpl extends AbstractEntityServiceImpl<Experiment>
 		if (experiment.getType() == null) {
 			throw new ValidateException("Type can not be empty.");
 		}
+	}
+
+	@Override
+	public boolean hasReaderRight(ExperimentVO experiment, UserVO currentUser) {
+		if (experiment.getOwner().equals(currentUser)) {
+			return true;
+		}
+		if (experiment.getParticipants().contains(currentUser)) {
+			return true;
+		}
+		return false;
 	}
 }

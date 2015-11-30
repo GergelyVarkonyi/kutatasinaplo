@@ -1,9 +1,5 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
-import hu.bme.aut.kutatasinaplo.model.User;
-import hu.bme.aut.kutatasinaplo.service.AuthService;
-import hu.bme.aut.kutatasinaplo.service.UserService;
-
 import javax.enterprise.context.RequestScoped;
 
 import org.apache.shiro.SecurityUtils;
@@ -14,7 +10,13 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
+
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
+import hu.bme.aut.kutatasinaplo.service.UserService;
 
 @RequestScoped
 public class AuthServiceImpl implements AuthService {
@@ -78,5 +80,11 @@ public class AuthServiceImpl implements AuthService {
 	public User getCurrentUser() {
 		Subject subject = SecurityUtils.getSubject();
 		return userService.loadByName((String) subject.getPrincipal());
+	}
+
+	@Override
+	public void checkCurrentUserIsAdmin() {
+		Role currentUserRole = getCurrentUser().getRole();
+		Preconditions.checkArgument(currentUserRole == Role.ADMIN);
 	}
 }

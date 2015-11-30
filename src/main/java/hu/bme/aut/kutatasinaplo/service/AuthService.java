@@ -10,4 +10,6 @@ public interface AuthService {
 	public User getCurrentUser();
 
 	public boolean logoutCurrentUser();
+
+	public void checkCurrentUserIsAdmin();
 }

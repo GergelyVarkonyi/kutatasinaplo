@@ -32,7 +32,7 @@
 			<div class="page-title-container">
 				<h2 class="page-title">Projects</h2>
 				<button class="btn btn-default page-title-button" type="submit"
-					ng-click="slideDownNew()">
+					ng-click="slideDownNew()" ng-show="currentUser.role == 'ADMIN'">
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 					New
 				</button>
@@ -68,7 +68,11 @@
 				</form>
 			</div>
 			<div>
-				<table class="table">
+				<div ng-hide="projects && projects.length > 0">
+					There are no projects to be displayed.
+				</div>
+			
+				<table class="table" ng-show="projects && projects.length > 0">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -83,7 +87,7 @@
 							<td>{{proj.name}}</td>
 							<td>{{proj.description}}</td>
 							<td><button type="submit" class="btn btn-danger"
-									ng-click="delete(proj)">Delete</button></td>
+									ng-click="delete(proj); $event.stopPropagation();">Delete</button></td>
 						</tr>
 					</tbody>
 				</table>

@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -14,20 +13,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
-import hu.bme.aut.kutatasinaplo.model.Project;
-import hu.bme.aut.kutatasinaplo.model.Role;
-import hu.bme.aut.kutatasinaplo.model.User;
 import hu.bme.aut.kutatasinaplo.service.AuthService;
 import hu.bme.aut.kutatasinaplo.service.ProjectService;
 import hu.bme.aut.kutatasinaplo.view.model.AddListToEntityVO;
-import hu.bme.aut.kutatasinaplo.view.model.ExperimentVO;
 import hu.bme.aut.kutatasinaplo.view.model.ProjectVO;
-import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 import lombok.extern.java.Log;
 
 @Path("/project")
@@ -56,8 +48,8 @@ public class ProjectResource {
 
 	@GET
 	@Path("/list")
-	public List<ProjectVO> loadProjects() {
-		return Lists.transform(projectService.loadAll(), mapper::map);
+	public List<ProjectVO> listAccessibleProjects() {
+		return projectService.listAccessibleProjects();
 	}
 
 	@GET
@@ -66,37 +58,11 @@ public class ProjectResource {
 	public ProjectVO load(@PathParam(value = "id") String id) {
 		log.info("Load project: " + id);
 		try {
-			User currentUser = authService.getCurrentUser();
-			UserVO currentUserVO = mapper.map(currentUser);
-			Project project = projectService.loadById(Integer.valueOf(id));
-			ProjectVO projectVO = mapper.map(project);
-			if (currentUser.getRole() != Role.ADMIN) {
-				List<ExperimentVO> experiments = projectVO.getExperiments();
-				List<ExperimentVO> accessibleExperiments = Lists
-						.newArrayList(Collections2.filter(experiments, exp -> hasReaderRight(exp, currentUserVO)));
-				projectVO.setExperiments(accessibleExperiments);
-				if (experiments.size() != accessibleExperiments.size()) {
-					projectVO.setExperimentWithoutRight(true);
-				}
-			} else {
-				boolean shouldDisplayAdminWarning = projectService.shouldDisplayAdminWarning(projectVO);
-				projectVO.setAdminAccessRightWarning(shouldDisplayAdminWarning);
-			}
-			return projectVO;
+			return projectService.loadProjectWithPermissionChecks(id);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage());
 			return null;
 		}
-	}
-
-	private boolean hasReaderRight(ExperimentVO experiment, UserVO currentUser) {
-		if (experiment.getOwner().equals(currentUser)) {
-			return true;
-		}
-		if (experiment.getParticipants().contains(currentUser)) {
-			return true;
-		}
-		return false;
 	}
 
 	@DELETE
@@ -144,7 +110,7 @@ public class ProjectResource {
 		}
 	}
 
-	@PUT
+	@POST
 	public Response save(ProjectVO projectVO) {
 		log.info("Saving project: " + projectVO.getName());
 		try {

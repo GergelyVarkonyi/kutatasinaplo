@@ -23,6 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Builder;
 
 @Entity
@@ -33,6 +34,7 @@ import lombok.experimental.Builder;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = { "id", "email" })
+@ToString(of = { "email" })
 public class User implements AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -19,7 +19,15 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 	   window.location = window.location.origin + "/kutatasinaplo/projectPage.html?id="+id; 
 	}
 	
+	$http.get('/kutatasinaplo/rest/auth/current').then(
+      // Success
+      function (resp) {
+        $scope.currentUser = resp.data;
+      }
+  );
+	
 	$scope.create = function(form) {
+	  
 		if (form.$valid){
 			$http.post('/kutatasinaplo/rest/project/create',
 					$scope.edited
@@ -37,6 +45,7 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 			form.$setPristine();
 		    form.$setUntouched();
 		    $scope.ok = true;
+		    $scope.slideUpNew(); 
 		} else {
 			$scope.ok = false;
 		}
@@ -62,7 +71,9 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 		$http.get('/kutatasinaplo/rest/project/list').then(
 					// Success
 					function (resp) {
-						$scope.projects = resp.data.project;
+					  if (resp.data){
+					    $scope.projects = resp.data.project;
+					  }
 					},
 					
 					// Error

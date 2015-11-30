@@ -185,7 +185,7 @@ app
 
                 $scope.data.experiments = experimentsInProject;
 
-                $http.put('rest/project/', $scope.data).then(
+                $http.post('rest/project/', $scope.data).then(
                 // Success
                 function(resp) {
                   init();
