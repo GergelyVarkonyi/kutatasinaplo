@@ -1,12 +1,6 @@
 package hu.bme.aut.kutatasinaplo.view.resource;
 
-import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
-import hu.bme.aut.kutatasinaplo.model.Role;
-import hu.bme.aut.kutatasinaplo.model.User;
-import hu.bme.aut.kutatasinaplo.service.AuthService;
-import hu.bme.aut.kutatasinaplo.service.UserService;
-import hu.bme.aut.kutatasinaplo.view.model.UserVO;
-
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -19,10 +13,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import lombok.extern.java.Log;
-
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
+import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
+import hu.bme.aut.kutatasinaplo.service.UserService;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
+import lombok.extern.java.Log;
 
 @Path("/auth")
 @Log
@@ -60,6 +61,13 @@ public class AuthResource {
 	@Path("/list/roles")
 	public List<Role> listRoles() {
 		return Lists.newArrayList(Role.values());
+	}
+
+	@GET
+	@Path("/list/registeredroles")
+	public List<Role> listRegisteredRoles() {
+		List<Role> allRoles = Arrays.asList(Role.values());
+		return Lists.newArrayList(Iterables.filter(allRoles, r -> r != Role.VISITOR));
 	}
 
 	@GET

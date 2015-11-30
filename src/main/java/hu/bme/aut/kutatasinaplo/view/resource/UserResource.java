@@ -1,11 +1,5 @@
 package hu.bme.aut.kutatasinaplo.view.resource;
 
-import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
-import hu.bme.aut.kutatasinaplo.model.User;
-import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
-import hu.bme.aut.kutatasinaplo.service.UserService;
-import hu.bme.aut.kutatasinaplo.view.model.UserVO;
-
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -16,11 +10,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import lombok.extern.java.Log;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
+import hu.bme.aut.kutatasinaplo.mapper.DataViewMapper;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
+import hu.bme.aut.kutatasinaplo.service.AuthService;
+import hu.bme.aut.kutatasinaplo.service.UserService;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
+import hu.bme.aut.kutatasinaplo.view.model.UsersVO;
+import lombok.extern.java.Log;
 
 @Path("/user")
 @Log
@@ -28,11 +29,14 @@ public class UserResource {
 
 	private UserService userService;
 	private DataViewMapper mapper;
+	private AuthService authService;
 
 	@Inject
-	public UserResource(UserService userService, DataViewMapper mapper) {
+
+	public UserResource(UserService userService, DataViewMapper mapper, AuthService authService) {
 		this.userService = userService;
 		this.mapper = mapper;
+		this.authService = authService;
 	}
 
 	@POST
@@ -74,7 +78,9 @@ public class UserResource {
 
 	@GET
 	@Path("/list/user")
-	public List<UserVO> listExperiments() {
+	public List<UserVO> listUsers() {
+		authService.checkCurrentUserIsAdmin();
+
 		return Lists.transform(userService.loadAll(), new Function<User, UserVO>() {
 
 			@Override
@@ -83,4 +89,15 @@ public class UserResource {
 			}
 		});
 	}
+
+	@POST
+	@Path("/saveroles")
+	public Response saveroles(UsersVO users) {
+		if (userService.saveRoles(users.getUsers())) {
+			return Response.ok().build();
+		} else {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+	}
+
 }

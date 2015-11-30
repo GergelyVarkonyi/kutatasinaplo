@@ -1,12 +1,5 @@
 package hu.bme.aut.kutatasinaplo.service.impl;
 
-import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
-import hu.bme.aut.kutatasinaplo.model.Role;
-import hu.bme.aut.kutatasinaplo.model.User;
-import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
-import hu.bme.aut.kutatasinaplo.service.UserService;
-import hu.bme.aut.kutatasinaplo.view.model.UserVO;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +15,14 @@ import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.hibernate.Hibernate;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
+import hu.bme.aut.kutatasinaplo.model.KeyValuePair;
+import hu.bme.aut.kutatasinaplo.model.Role;
+import hu.bme.aut.kutatasinaplo.model.User;
+import hu.bme.aut.kutatasinaplo.model.validate.ValidateException;
+import hu.bme.aut.kutatasinaplo.service.UserService;
+import hu.bme.aut.kutatasinaplo.view.model.UserVO;
 
 public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements UserService {
 
@@ -102,6 +103,27 @@ public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements 
 	@Override
 	protected Class<User> getEntityClass() {
 		return User.class;
+	}
+
+	@Override
+	public boolean saveRoles(List<UserVO> users) {
+
+		EntityManager em = null;
+		try {
+			em = beginTransaction();
+			List<User> managedUsers = loadByIds(Lists.transform(users, user -> user.getId()));
+			for (int i = 0; i < managedUsers.size(); i++) {
+				User managedUser = managedUsers.get(i);
+				managedUser.setRole(users.get(i).getRole());
+				em.persist(managedUser);
+			}
+			commitTransaction(em);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
+		}
 	}
 
 }
