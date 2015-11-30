@@ -18,6 +18,14 @@ app.controller('HeaderController', ['$scope','$http','$rootScope','$timeout', fu
 				$rootScope.message.present = false;
 			}, 10000);
 		});
+		
+		$http.get('/kutatasinaplo/rest/auth/current').then(
+      // Success
+      function(resp) {
+        var userData = resp.data;
+        $scope.isAdmin = userData.role == 'ADMIN';
+      });
+
 	}
 	
 	$scope.logout = function() {
