@@ -35,7 +35,7 @@ app.controller('AuthController', [ '$scope', '$rootScope', '$http', function($sc
 		}, {
 			'Content-type' : "application/json"
 		}).success(function(data) {
-			window.location = window.location.origin + "/kutatasinaplo/auth/index.html";
+			window.location = window.location.origin + "/kutatasinaplo/auth/projects.html";
 		}).error(function(data) {
 			$rootScope.message = {'present' : true, 'message': "There was an error during the process, please try it again later.", 'type':'danger'};
 		});
