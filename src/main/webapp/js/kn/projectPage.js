@@ -9,26 +9,28 @@ app
             '$rootScope',
             function($scope, $http, $rootScope) {
 
-              $scope.isAdmin = true;
+              $scope.isAdmin = false;
               $scope.data = {};
 
               $scope.edit = function() {
                 $scope.inEditorMode = true;
                 $scope.dataSnapshot = angular.copy($scope.data);
               }
-              
-              $scope.cancel = function(){
+
+              $scope.cancel = function() {
                 $scope.data = $scope.dataSnapshot;
                 $scope.inEditorMode = false;
               }
 
-              $scope.addEveryone = function(){
-                $http.post('rest/project/add-everyone', 
-                    $scope.id
-                    ).then(
+              $scope.addEveryone = function() {
+                $http.post('rest/project/add-everyone', $scope.id).then(
                 // Success
                 function(resp) {
-                  $rootScope.message = {'present' : true, 'message': 'Succesfully added everyone.', 'type':'success'};
+                  $rootScope.message = {
+                    'present' : true,
+                    'message' : 'Succesfully added everyone.',
+                    'type' : 'success'
+                  };
                   $scope.data.adminAccessRightWarning = false;
                 },
                 // Error
@@ -36,7 +38,7 @@ app
 
                 });
               }
-              
+
               $scope.slideDownParticipantsAdder = function() {
                 $("#add-participants-form-container").slideDown("slow");
               }
@@ -44,9 +46,10 @@ app
               $scope.slideUpParticipantsAdder = function() {
                 $("#add-participants-form-container").slideUp("slow");
               }
-              
+
               $scope.loadExperiment = function(id) {
-                window.location = window.location.origin + "/kutatasinaplo/experimentPage.html?id="+id; 
+                window.location = window.location.origin
+                    + "/kutatasinaplo/experimentPage.html?id=" + id;
               }
 
               $scope.setParticipants = function() {
@@ -73,14 +76,22 @@ app
               var init = function() {
                 $scope.inEditorMode = false;
                 $scope.id = $.url(window.location).param('id');
+                $http.get('rest/auth/current').then(
+                // Success
+                function(resp) {
+                  var userData = resp.data;
+                  $scope.isAdmin = userData.role == 'ADMIN';
+                });
+
                 $http
                     .get('rest/project/' + $scope.id)
                     .then(
                         // Success
                         function(resp) {
                           $scope.data = resp.data;
-                          if ($scope.data.experiments && $scope.data.experiments.constructor !== Array) {
-                            $scope.data.experiments = [$scope.data.experiments];
+                          if ($scope.data.experiments
+                              && $scope.data.experiments.constructor !== Array) {
+                            $scope.data.experiments = [ $scope.data.experiments ];
                           }
                           // Participants
                           if ($scope.data.participants) {
