@@ -1,6 +1,9 @@
 var app = angular.module("knApp");
 
 app.controller('ExperimentsController', ['$scope', '$http','$rootScope', function($scope, $http, $rootScope) {
+	$scope.validationMap = {
+			'name':{'valid': true, 'msg': ''},
+			'description':{'valid': true, 'msg': ''}};
 	$scope.experiments = [];
 	
 	$scope.slideDownNew = function() {
@@ -33,6 +36,26 @@ app.controller('ExperimentsController', ['$scope', '$http','$rootScope', functio
 		var isPublic = false;
 		if($("#new-experiment-public").is(":checked")) {
 			isPublic = true;
+		}
+		
+		var validationError = false;
+		if(!name) {
+			$scope.validationMap.name.valid=false;
+			$scope.validationMap.name.msg='Name is requeired.';
+			validationError = true;
+		} else {
+			$scope.validationMap.name.valid=true;
+		}
+		if(!description) {
+			$scope.validationMap.description.valid=false;
+			$scope.validationMap.description.msg='Description is requeired.';
+			validationError = true;
+		} else {
+			$scope.validationMap.description.valid=true;
+		}
+		
+		if (validationError) {
+			return;
 		}
 		
 		$http.post('rest/experiment/create',

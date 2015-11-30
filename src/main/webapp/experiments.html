@@ -36,10 +36,12 @@
 				<form>
 				  <div class="form-group">
 				    <label for="new-experiment-name">Name</label>
+				    <p class="alert alert-danger" ng-if="!validationMap.name.valid">{{validationMap.name.msg}}</p>
 				    <input type="text" class="form-control" id="new-experiment-name" placeholder="Name">
 				  </div>
 				  <div class="form-group">
 				    <label for="new-experiment-description">Description</label>
+				    <p class="alert alert-danger" ng-if="!validationMap.description.valid">{{validationMap.description.msg}}</p>
 				    <textarea class="form-control not-resizable" id="new-experiment-description" rows="6"></textarea>
 				  </div>
 				  <div class="form-group">
