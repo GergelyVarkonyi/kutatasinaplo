@@ -70,6 +70,7 @@ public class ProjectResource {
 	@Produces(value = MediaType.APPLICATION_JSON)
 
 	public Response delete(@PathParam(value = "id") String id) {
+		authService.checkCurrentUserIsAdmin();
 		boolean success = projectService.delete(Integer.valueOf(id));
 		if (success) {
 			return Response.ok().build();

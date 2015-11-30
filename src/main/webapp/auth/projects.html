@@ -86,7 +86,7 @@
 							<th scope="row">{{$index + 1}}</th>
 							<td>{{proj.name}}</td>
 							<td>{{proj.description}}</td>
-							<td><button type="submit" class="btn btn-danger"
+							<td ng-show="currentUser.role == 'ADMIN'"><button type="submit" class="btn btn-danger" 
 									ng-click="delete(proj); $event.stopPropagation();">Delete</button></td>
 						</tr>
 					</tbody>
