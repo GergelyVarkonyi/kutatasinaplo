@@ -105,8 +105,11 @@ public class ProjectServiceImpl extends AbstractEntityServiceImpl<Project> imple
 	}
 
 	private boolean shouldDisplayAdminWarning(Project project) {
+		Set<User> projectParticipantsSet = Sets.newHashSet();
 		List<User> participants = project.getParticipants();
-		Set<User> projectParticipantsSet = Sets.newHashSet(participants);
+		if (participants != null) {
+			projectParticipantsSet.addAll(participants);
+		}
 		List<Experiment> experiments = project.getExperiments();
 		for (Experiment experimentVO : experiments) {
 			List<User> participantsOfExperiment = experimentVO.getParticipants();

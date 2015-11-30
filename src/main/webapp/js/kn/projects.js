@@ -1,7 +1,7 @@
 var app = angular.module("knApp");
 
 app.controller('ProjectsController', ['$scope', '$http', function($scope, $http) {
-	$scope.projects = [];
+	$scope.projects = new Array();
 	
 	$scope.edited = {};
 	
