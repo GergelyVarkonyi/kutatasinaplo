@@ -126,7 +126,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>KutatasiNaplo</finalName>
+		<finalName>kutatasinaplo</finalName>
 		<plugins>
 
 			<plugin>
