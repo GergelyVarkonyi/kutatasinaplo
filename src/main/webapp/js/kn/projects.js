@@ -72,7 +72,11 @@ app.controller('ProjectsController', ['$scope', '$http', function($scope, $http)
 					// Success
 					function (resp) {
 					  if (resp.data){
-					    $scope.projects = resp.data.project;
+					    if (resp.data.project.constructor == Array){
+					      $scope.projects = resp.data.project;
+					    } else {
+					      $scope.projects[0] = resp.data.project;
+					    }
 					  }
 					},
 					

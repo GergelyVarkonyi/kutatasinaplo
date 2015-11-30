@@ -111,13 +111,15 @@ public class ProjectServiceImpl extends AbstractEntityServiceImpl<Project> imple
 			projectParticipantsSet.addAll(participants);
 		}
 		List<Experiment> experiments = project.getExperiments();
-		for (Experiment experimentVO : experiments) {
-			List<User> participantsOfExperiment = experimentVO.getParticipants();
-			if (participantsOfExperiment != null) {
-				Set<User> onlyAddedToExperiment = participantsWhoArePartOfProjectButNotExperiment(
-						projectParticipantsSet, experimentVO);
-				if (!onlyAddedToExperiment.isEmpty()) {
-					return true;
+		if (experiments != null) {
+			for (Experiment experimentVO : experiments) {
+				List<User> participantsOfExperiment = experimentVO.getParticipants();
+				if (participantsOfExperiment != null) {
+					Set<User> onlyAddedToExperiment = participantsWhoArePartOfProjectButNotExperiment(
+							projectParticipantsSet, experimentVO);
+					if (!onlyAddedToExperiment.isEmpty()) {
+						return true;
+					}
 				}
 			}
 		}
